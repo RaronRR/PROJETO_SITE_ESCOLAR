@@ -1,5 +1,5 @@
-body{
-    font-family: sans-serif ;
+body{   
+   font-family: sans-serif;
     background-image: url(img/fundo.png);
     background-attachment: fixed;
    
@@ -10,7 +10,7 @@ body{
     margin: auto;
 }
 h1{
-    color: #251e1ed8;  
+    color: #3C3C3C;  
     display: flex;
     justify-content: center;
 }
