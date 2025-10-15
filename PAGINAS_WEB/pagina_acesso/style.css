@@ -23,7 +23,7 @@ h1{
 }
 
 button{
-    display: felx;
+    display: block;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
@@ -61,3 +61,5 @@ a{
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); 
 }
 
+
+    
