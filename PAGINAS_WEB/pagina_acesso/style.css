@@ -1,15 +1,22 @@
+@font-face {
+    font-family: myFont;
+    src: url(fonts/Nunito-VariableFont_wght.ttf);
+}
 body{   
-   font-family: sans-serif;
+   font-family: myFont;
     background-image: url(img/fundo.png);
     background-attachment: fixed;
    
 }
+
+
 .logoEscola{
     width: 30%;
     display: block;
     margin: auto;
 }
 h1{
+    font-weight: bold;
     color: #3C3C3C;  
     display: flex;
     justify-content: center;
@@ -50,11 +57,12 @@ button:hover {
 }
 
 a{
+    font-family: myFont;
     text-decoration: none;
-    color: black;
+    color: #303030;
 }
 .cor_especial{
-    color: #251e1ed8;  
+    color: #3C3C3C;  
 }
 .botao-animado:hover{
   transform: scale(5.05); 
