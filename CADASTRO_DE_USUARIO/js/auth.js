@@ -1,6 +1,6 @@
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"; 
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"; 
 import { auth, db } from "./firebase.js";
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { collection, addDoc, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const botaoCadastro = document.getElementById("bottun_cadastro");
 botaoCadastro.addEventListener("click", cadastrarUsuario);
@@ -26,7 +26,7 @@ async function cadastrarUsuario(e) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, emailValue, senhaValue);
         const user = userCredential.user;
-        await addDoc(collection(db, "usuarios"), {
+        await setDoc(doc(db, "usuarios", user.uid), {
             uid: user.uid,
             nome: nomeValue,
             email: emailValue,
@@ -45,4 +45,47 @@ async function cadastrarUsuario(e) {
     }
 }
 
+////////// Login de Usuário //////
 
+const botaoLogin = document.getElementById("bottun_login");
+botaoLogin.addEventListener("click", fazerLogin);
+
+async function fazerLogin(e){
+    e.preventDefault();
+
+    const emailElemento = document.getElementById("input_email_login");
+    const senhaElemento = document.getElementById("input_senha_login");
+    const emailValue = emailElemento.value;
+    const senhaValue = senhaElemento.value;
+
+    if (!emailValue.trim() || !senhaValue.trim()) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    } 
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, emailValue, senhaValue);
+        const user = userCredential.user;
+        const docRef = doc(db, "usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            console.log("Dados do usuário:", userData);
+            const role = userData.role;
+            if (role === "admin") {
+                window.location.href = "admin_pagina.html";
+            } else {
+                window.location.href = "user_pagina.html";
+            }
+        } else {
+            console.log("Nenhum dado encontrado para este usuário!");
+        }
+        console.log("Login realizado com sucesso!");
+        emailElemento.value = "";
+        senhaElemento.value = "";
+    }
+    catch (error) {
+        console.error("Erro ao fazer login, tente novamente. " + error.message);
+        alert("Erro ao fazer login, tente novamente. " + error.message);
+    }
+}
