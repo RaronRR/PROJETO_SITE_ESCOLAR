@@ -2,9 +2,13 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "http
 import { auth, db } from "./firebase.js";
 import { collection, addDoc, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-const botaoCadastro = document.getElementById("bottun_cadastro");
-botaoCadastro.addEventListener("click", cadastrarUsuario);
+/////////// Cadastro de Usuário //////
 
+const botaoCadastro = document.getElementById("bottun_cadastro");
+
+if(botaoCadastro){
+    botaoCadastro.addEventListener("click", cadastrarUsuario);
+}
 async function cadastrarUsuario(e) {
     e.preventDefault(); // Evita que a pagina seja recarregada
 
@@ -48,8 +52,10 @@ async function cadastrarUsuario(e) {
 ////////// Login de Usuário //////
 
 const botaoLogin = document.getElementById("bottun_login");
-botaoLogin.addEventListener("click", fazerLogin);
 
+if(botaoLogin){
+    botaoLogin.addEventListener("click", fazerLogin);
+}
 async function fazerLogin(e){
     e.preventDefault();
 
