@@ -79,9 +79,9 @@ async function fazerLogin(e){
             console.log("Dados do usuário:", userData);
             const role = userData.role;
             if (role === "admin") {
-                window.location.href = "admin_pagina.html";
+                window.location.href = "PAGINA_ADM/admin_pagina.html";
             } else {
-                window.location.href = "user_pagina.html";
+                window.location.href = "PAGINAS_WEB/user_pagina.html";
             }
         } else {
             console.log("Nenhum dado encontrado para este usuário!");
