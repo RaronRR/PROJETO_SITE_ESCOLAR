@@ -1,0 +1,190 @@
+@font-face {
+  font-family: myFont;
+  src: url(../assets/fonts/Nunito-VariableFont_wght.ttf);
+}
+body{
+    font-family: myFont;
+    display: flex; 
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0%;
+    padding: 0%;
+    background-image: url(../assets/img/fundo.png);
+}
+img{
+    max-width: 50px;
+    height: auto;
+}
+.main_content_wrapper{
+    flex: 1;
+    display: flex;
+    padding: 15px 0 ;
+    height: 100%;
+}
+.sidebar{
+    width: 60px;
+    min-height: 100%;
+    background-color: #343a40;
+    border-radius: 8px;
+    padding-top: 20px;
+    display: none;
+    flex-direction: column; 
+    align-items: center;
+}
+.main_content_area{
+    display: flex;
+    flex-direction: column;
+    flex: 1;  
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding-left: 0px;  
+}
+.card_branco{
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.cards_container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+.aluno01, .aluno02{
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer;
+    margin: 0;
+}
+.aluno01 h3, .aluno02 h3 {
+    font-weight: bold; 
+    font-size: 1.2em; 
+    margin-bottom: 5px; 
+}
+.aluno01 p, .aluno02 p {
+    font-size: 0.9em; 
+    color: #666; 
+    font-style: italic; 
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+ 
+}
+.widget_usuario {
+    display: flex; 
+    align-items: center; 
+    background-color: white;
+    padding: 8px 15px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    position: relative;
+}
+.header_card_wrapper {
+    display: flex; 
+    flex: 100%;
+    justify-content: space-between; 
+    align-items: center;
+    background-color: white; 
+    padding: 8px 15px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 450px; 
+    max-width: 90%;
+}
+
+
+
+.profile-dropdown-menu {
+    position: absolute;
+    display: none; 
+    top: 100%; 
+    right: 0; 
+    background-color: white;
+    min-width: 150px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px 0; 
+    z-index: 1000; 
+}
+.profile-dropdown-menu.active {
+    display: block; 
+}
+.profile-dropdown-menu ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+.profile-dropdown-menu li {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s; 
+}
+.profile-dropdown-menu li:hover {
+    background-color: rgb(184, 183, 183); 
+}
+.dropdown_toggle_btn{
+    background: transparent; 
+    border: none;            
+    margin-left: 10px;      
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #444;           
+    padding: 0;            
+}
+.aluno01:active, .aluno02:active {
+    transform: scale(0.95);
+}
+.aluno01,.aluno02{
+    transition: transform 0.1s;
+}
+.card_branco h1 {
+    text-align: center; 
+    text-transform: uppercase; 
+    font-weight: bold;
+    margin-top: 10px;
+}
+.aluno01 p, .aluno02 p {
+    font-size: 0.9em; 
+    color: #666; 
+    font-style: italic; 
+}
+.faixa_colorida {
+    height: 20px;
+    margin: -20px -20px 0 -20px;
+
+    background: linear-gradient(
+        to right, 
+        #28a745 0%, #28a745 20%,  
+        
+        #dc3545 20%, #dc3545 40%, 
+        
+        #6f42c1 40%, #6f42c1 60%, 
+        
+        #007bff 60%, #007bff 80%, 
+        
+        #fd7e14 80%, #fd7e14 100%
+    );
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    
+    width: calc(100% + 40px);
+}
+.card_branco {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
