@@ -52,7 +52,6 @@ async function cadastrarUsuario(e) {
 
 //Login de Usuário 
 const botaoLogin = document.getElementById("bottun_login");
-
 if(botaoLogin){
     botaoLogin.addEventListener("click", fazerLogin);
 }
@@ -102,25 +101,4 @@ async function fazerLogin(e){
         console.error("Erro ao fazer login, tente novamente. " + error.message);
         alert("Erro ao fazer login, tente novamente. " + error.message);
     }
-}
-
-export function inicializarPaginaUser() {
-    // Usa onAuthStateChanged para garantir que o usuário está logado
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            const userId = user.uid;
-    
-            const alunos = await getAlunosDoResponsavel(userId); 
-
-            if (alunos.length > 0) {
-                renderizarCardsAlunos(alunos);
-                adicionarListenersNosCards();
-            } else {
-                console.log("Nenhum aluno encontrado para este responsável.");
-        }
-            
-        } else {
-            window.location.href = "../login.html"; 
-        }
-    });
 }
