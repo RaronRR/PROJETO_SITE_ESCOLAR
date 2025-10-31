@@ -1,8 +1,9 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"; 
 import { auth, db } from "./firebase.js";
 import { collection, addDoc, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {renderizarCardsAlunos, adicionarListenersNosCards} from './ui.js';
 
-/////////// Cadastro de Usuário //////
+// Cadastro de Usuário 
 
 const botaoCadastro = document.getElementById("bottun_cadastro");
 
@@ -49,8 +50,7 @@ async function cadastrarUsuario(e) {
     }
 }
 
-////////// Login de Usuário //////
-
+//Login de Usuário 
 const botaoLogin = document.getElementById("bottun_login");
 
 if(botaoLogin){
@@ -74,19 +74,27 @@ async function fazerLogin(e){
         const docRef = doc(db, "usuarios", user.uid);
         const docSnap = await getDoc(docRef);
 
+        let targetPage = ""; 
+
         if (docSnap.exists()) {
             const userData = docSnap.data();
             console.log("Dados do usuário:", userData);
             const role = userData.role;
             if (role === "admin") {
-                window.location.href = "PAGINA_ADM/admin_pagina.html";
+                window.location.href = "PAGINA_ADM/admin_pagina.html"; //ADM
             } else {
-                window.location.href = "PAGINAS_WEB/user_pagina.html";
+                window.location.href = "PAGINAS_WEB/user_pagina.html"; //RESPOSÁVEL
             }
         } else {
             console.log("Nenhum dado encontrado para este usuário!");
+            targetPage = "PAGINAS_WEB/user_pagina.html";
         }
-        console.log("Login realizado com sucesso!");
+        
+        if (targetPage) {
+            console.log("Login realizado com sucesso! Redirecionando...");
+            window.location.href = targetPage;
+        }
+        
         emailElemento.value = "";
         senhaElemento.value = "";
     }
@@ -94,4 +102,25 @@ async function fazerLogin(e){
         console.error("Erro ao fazer login, tente novamente. " + error.message);
         alert("Erro ao fazer login, tente novamente. " + error.message);
     }
+}
+
+export function inicializarPaginaUser() {
+    // Usa onAuthStateChanged para garantir que o usuário está logado
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const userId = user.uid;
+    
+            const alunos = await getAlunosDoResponsavel(userId); 
+
+            if (alunos.length > 0) {
+                renderizarCardsAlunos(alunos);
+                adicionarListenersNosCards();
+            } else {
+                console.log("Nenhum aluno encontrado para este responsável.");
+        }
+            
+        } else {
+            window.location.href = "../login.html"; 
+        }
+    });
 }

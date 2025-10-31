@@ -188,3 +188,12 @@ header{
     border-radius: 8px;
     overflow: hidden;
 }
+.secao_selecao_aluno {
+    display: none;
+}
+body.dashboard-ativa .sidebar {
+    display: flex;
+}
+body.dashboard-ativa .secao_selecao_aluno {
+    display: none;
+}

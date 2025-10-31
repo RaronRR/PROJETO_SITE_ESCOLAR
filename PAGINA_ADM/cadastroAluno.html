@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Formulario De cadastro</title>
+</head>
+<body>
+    <h1>Formulario Para Cadastro de Usuarios</h1>
+
+    <form>
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="input_nome_aluno" name="nome" required><br><br>
+
+        <label for="turma">Turma:</label>
+        <input type="text" id="turma_aluno" name="turma" required><br><br>
+
+        <label for="">Data de Nasciemento:</label>
+        <input type="date" id="data_nascimento_aluno" name="data_nascimento" required><br><br>
+
+
+            <button id="bottun_cadastro_Aluno">Enviar</button>
+    </form> 
+
+    <script src="../js/data.js" type="module"></script>
+    <script src="../js/pagina_user.js" type="module"></script>
+    <script src="../js/firebase.js" type="module"></script>
+    <script src="../js/auth.js" type="module"></script>
+    <script src="../js/ui.js" type="module"></script>
+</body>
+</html>
