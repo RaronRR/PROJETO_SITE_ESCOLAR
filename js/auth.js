@@ -1,12 +1,11 @@
+import { alunosCollectionRef } from '../js/firebase.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js"; 
 import { auth, db } from "./firebase.js";
-import { collection, addDoc, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-import {renderizarCardsAlunos, adicionarListenersNosCards} from './ui.js';
+import {collection, addDoc, getDoc, doc, setDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
 
 // Cadastro de Usuário 
-
 const botaoCadastro = document.getElementById("bottun_cadastro");
-
 if(botaoCadastro){
     botaoCadastro.addEventListener("click", cadastrarUsuario);
 }
@@ -44,6 +43,7 @@ async function cadastrarUsuario(e) {
         nomeElemento.value = "";
         emailElemento.value = "";
         numeroElemento.value = "";
+        senhaElemento.value = "";
     } catch (error) {
         console.error("Erro ao cadastrar usuário, tente novamente." + error.message);
         alert("Erro ao cadastrar usuário, tente novamente." + error.message);
@@ -102,3 +102,4 @@ async function fazerLogin(e){
         alert("Erro ao fazer login, tente novamente. " + error.message);
     }
 }
+
