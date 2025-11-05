@@ -73,7 +73,7 @@ form {
   font-size: 1em;
 }
 
-.login_box button {
+button {
   display: block;
   width: 80%;
   margin: 15px auto 0;

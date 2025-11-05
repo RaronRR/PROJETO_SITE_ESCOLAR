@@ -1,7 +1,6 @@
-import { auth, db, alunosCollectionRef } from "./firebase.js"; 
+import { auth, db } from "./firebase.js"; 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { collection, addDoc, getDoc, doc, setDoc, query, where, getDocs 
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";  
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -30,15 +29,13 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-
-
 //Cadastro de Aluno
 const botaoCadastroAluno = document.getElementById("bottun_cadastro_Aluno")
 if(botaoCadastroAluno){
-    botaoCadastroAluno.addEventListener("click", cadastroAluno);
+    botaoCadastroAluno.addEventListener("click", cadastroAluno)
 }
 async function cadastroAluno(e) {
-
+    console.log("tentativa de cadastro iniciado")
     e.preventDefault();
 
     const nomeAluno = document.getElementById("input_nome_aluno");
@@ -50,59 +47,53 @@ async function cadastroAluno(e) {
     const nomeAlunoValue = nomeAluno.value;
     const turmaValue = turmaAluno.value;
     const dataNascimentoValue = dataNascimento.value;
-    const responsavelValeua = nomeResponsavel.value;
+    const nomeResponsavelValue = nomeResponsavel.value;
     const emailResponsavelValue = emailResponsavel.value;
 
-    if (!nomeAlunoValue.trim() || !turmaValue.trim() || !dataNascimentoValue.trim() || !responsavelValeua.trim() || !emailResponsavelValue.trim()) {
+    if (!nomeAlunoValue.trim() || !turmaValue.trim() || !dataNascimentoValue.trim() || !nomeResponsavelValue.trim() || !emailResponsavelValue.trim()) {
         alert("Por favor, preencha todos os campos.");
         return;
         // Verifica se algum campo está vazio, .trim() remove espaços em branco
     }
 
-    //buscar responsavel pelo Email 
-    const responsavelQuery = query(
-        collection(db, "usuario"),
-        where("email", "==", emailResponsavelValue) //O email deve ser igual ao cadastrado
-    );
-    let responsibleUID = null;
-
-    try{
-        const querySnapshot = await getDocs(responsavelQuery);
-        if(querySnapshot.empty){ 
-         alert("Erro: Responsavel com o email não foi encontrado ou não existe!");
-         return;
-        }
-        
-        const responsavelDoc = querySnapshot.docs[0];
-        responsibleUID = responsavelDoc.id;
-    
-    } catch(error){
-        console.error("Error ao buscar responsavel: ", error)
-        alert("Ocorreu um erro ao buscar o responsável. Verifique o console.");
-        return
-    }
-
-    const dadosAlunos = {
+    const dados = {
         nomeAluno: nomeAlunoValue,
         turma: turmaValue,
         dataNascimento: dataNascimentoValue,
-        nomeResponsavel: responsavelValeua,
-        emailResponsavel: emailResponsavelValue,
-        responsibleUID: responsibleUID,
-        dataDeCadastro: new Date().toISOString()
+        nomeResponsavel: nomeResponsavelValue,
+        emailResponsavel: emailResponsavelValue
     }
 
     try{
-        const docRef = await addDoc(alunosCollectionRef, dadosAlunos);
-        alert("Aluno cadastrado com sucesso! ID: " + docRef.id)
+        // ATENÇÃO: A URL ABAIXO É APENAS PARA TESTE LOCAL. 
+        // Você usará esta URL quando for TESTAR no Terminal:
+        // http://127.0.0.1:5001/SEU_PROJECT_ID/us-central1/cadastroAlunoAdmin
+        // SUBSTITUA "SEU_PROJECT_ID" pelo ID REAL do seu projeto Firebase!
+        
+        const response = await fetch('https://us-central1-sistemacadastro-e4c2b.cloudfunctions.net/cadastroAlunoAdmin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
 
-        nomeAluno.value = "";
-        turmaAluno.value = "";
-        dataNascimento.value = "";
-        nomeResponsavel.value = "";
-        emailResponsavel.value = "";
-    } catch (error) {
-        console.error("Erro ao adicionar documento: ", error);
-        alert("Ocorreu um erro ao cadastrar o aluno. Verifique o CONSOLE.")
+        if(response.ok) {
+            alert("Aluno cadastrado com sucesso! A busca do responsável foi feita no Backend.")
+            
+            nomeAluno.value = "";
+            turmaAluno.value = "";
+            dataNascimento.value = "";
+            nomeResponsavel.value = "";
+            emailResponsavel.value = "";
+        } else {
+             const errorText = await response.text();
+             alert("Erro ao cadastrar aluno: " + errorText);
+             console.error("Erro do Backend:", errorText);
+        }
+    } catch (error){
+        console.error("Erro na comunicação com o Backend: ", error);
+        alert("Ocorreu um erro de rede ao tentar cadastrar o aluno.");
     }
 }   
+

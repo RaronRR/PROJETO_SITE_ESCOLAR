@@ -29,7 +29,9 @@ async function cadastrarUsuario(e) {
     }
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, emailValue, senhaValue);
+
         const user = userCredential.user;
+        
         await setDoc(doc(db, "usuarios", user.uid), {
             uid: user.uid,
             nome: nomeValue,
@@ -77,16 +79,16 @@ async function fazerLogin(e){
 
         if (docSnap.exists()) {
             const userData = docSnap.data();
+
             console.log("Dados do usuário:", userData);
             const role = userData.role;
             if (role === "admin") {
-                window.location.href = "PAGINA_ADM/admin_pagina.html"; //ADM
+                window.location.href = "/PAGINA_ADM/admin_pagina.html"; //ADM
             } else {
-                window.location.href = "PAGINAS_WEB/user_pagina.html"; //RESPOSÁVEL
+                window.location.href = "PAGINAS_WEB/user_pagina.html" ; //RESPOSÁVEL
             }
         } else {
             console.log("Nenhum dado encontrado para este usuário!");
-            targetPage = "PAGINAS_WEB/user_pagina.html";
         }
         
         if (targetPage) {

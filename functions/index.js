@@ -1,32 +1,126 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+/* eslint-disable indent */
+/* eslint-disable comma-dangle */
 
-const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const logger = require("firebase-functions/logger");
+const admin = require("firebase-admin");
+const functions = require("firebase-functions");
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+admin.initializeApp();
+const db = admin.firestore();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+exports.cadastroAlunoAdmin = functions.https.onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  if (req.method === "OPTIONS") {
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    return res.status(204).send("");
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).send("Metodo não permitido. Use POST");
+  }
+
+  const {
+    nomeAluno,
+    turma,
+    dataNascimento,
+    nomeResponsavel,
+    emailResponsavel,
+  } = req.body;
+
+  if (!nomeAluno || !emailResponsavel) {
+    return res.status(400).send("Dados incompletos.");
+  }
+
+  let responsibleUID = null;
+
+  try {
+    const responsavelQuery = await db.collection("usuarios")
+        .where("email", "==", emailResponsavel)
+        .limit(1)
+        .get();
+
+    if (responsavelQuery.empty) {
+      return res.status(404)
+      .send("Erro: Responsável com o email não foi encontrado.");
+    }
+
+    responsibleUID = responsavelQuery.docs[0].id;
+  } catch (error) {
+    console.error("Erro no Backend ao buscar responsável:", error);
+    return res.status(500).send("Erro interno ao buscar responsável.");
+  }
+
+  const dadosAlunos = {
+    nomeAluno,
+    turma,
+    dataNascimento,
+    nomeResponsavel,
+    emailResponsavel,
+    responsibleUID,
+    dataDeCadastro: new Date().toISOString(),
+  };
+
+  try {
+    await db.collection("alunos").add(dadosAlunos);
+    return res.status(200).send("Aluno cadastrado com sucesso!");
+  } catch (error) {
+    console.error("Erro no Backend ao cadastrar aluno:", error);
+    return res.status(500).send("Erro interno ao cadastrar aluno.");
+  }
+});
+
+exports.listaAlunosResponsavel = functions.https.onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+
+  if (req.method === "OPTIONS") {
+    res.set("Access-Control-Allow-Methods", "GET");
+    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.set("Access-Control-Max-Age", "3600");
+    return res.status(204).send("");
+  }
+
+  if (req.method !== "GET") {
+    return res.status(405).send("Método não permitido. Use GET.");
+  }
+
+  const idToken = req.headers.authorization;
+
+  if (!idToken) {
+    return res.status(403)
+    .send("Acesso negado. Token de autenticação ausente.");
+  }
+
+  let uidResponsavel;
+
+  try {
+    const decodedToken = await admin.auth()
+        .verifyIdToken(idToken.replace("Bearer ", ""));
+
+    uidResponsavel = decodedToken.uid;
+  } catch (error) {
+    console.error("token erro", error);
+    return res.status(403).send("token invalido");
+  }
+
+  try {
+    const alunosSnapshot = await db.collection("alunos")
+        .where("responsibleUID", "==", uidResponsavel)
+        .get();
+
+    const alunos = [];
+
+    alunosSnapshot.forEach((doc) => {
+      alunos.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return res.status(200).json(alunos);
+  } catch (error) {
+    console.error("Busca erro", error);
+    return res.status(500).send("Erro interno ao buscar dados.");
+  }
+});

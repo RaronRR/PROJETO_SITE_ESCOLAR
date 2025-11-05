@@ -1,85 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/user.css">
-    <title>Document</title>
+    <title>Painel do Responsável</title>
 </head>
 <body>
-   <header>
-        <div class="header_card_wrapper">
-            <div>
-                <img src="../assets/img/logo_Ecola.png" alt="logo_Ecola">
-            </div>
-           
-        
-
-            <div class="widget_usuario">
-                <div class="user_info_text">
-                    <span class="user_name"></span>
-                    <span class="user_role"></span>
-                </div>
-
-                <button class="dropdown_toggle_btn">&#9660;</button>
-                
-                <div class="profile-dropdown_menu">
-                    <ul>
-                        <li>Troca de conta</li>
-                        <li>Sair</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="main_content_wrapper">
-        <nav class="sidebar"></nav>
-
-        <main class="main_content_area">  
-            <div class="secao_selecao_aluno">
-
-                <div class="card_branco">
-                    <div class="faixa_colorida"></div>
-                    <h1>SELECIONE O ALUNO(A):</h1> 
-                </div>
-
-                <div class="cards_container">
-                    <div class="aluno01" data-student-id="12345">
-                        <h3 class="nome_aluno">julia da silva</h3>
-                        <p>turma</p>
-                    </div>
-
-                    <div class="aluno02" data-student-id="67890">
-                        <h3 class="nome_aluno">Paulo da silva</h3>
-                        <p>turma 2</p>
-                    </div>    
-
-                </div>      
-            </div>
-
-            <div class="dashboard_content" style="display: none;"></div>
-
-
-
-
-
-
-        </main>
+    <h1>Selecione o Aluno(a):</h1>
+    
+    <!-- Container onde os alunos aparecerão -->
+    <div id="container-alunos">
+        <p>Carregando alunos...</p>
     </div>
 
-
-
-
-
-
-
-
-
-    <script src="../js/pagina_user.js" type="module"></script>
-    <script src="../js/ui.js" type="module"></script>
-    <script src="../js/firebase.js" type="module"></script>
-    <script src="../js/auth.js" type="module"></script>
-    <script src="../js/ui.js" type="module"></script>
+    <!-- 🔥 APENAS UM SCRIPT PRINCIPAL -->
+    <script type="module" src="../js/painel_responsavel_logic.js"></script>
 </body>
 </html>

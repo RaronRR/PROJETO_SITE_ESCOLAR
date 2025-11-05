@@ -1,0 +1,50 @@
+@font-face {
+  font-family: myFont;
+  src: url(../assets/fonts/Nunito-VariableFont_wght.ttf);
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    
+}
+body{
+    background-image: url(../assets/img/fundo.png);
+    font-family: myFont;
+}
+img{
+    max-width: 550px;
+
+}
+.formulario{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    text-align: center;
+    border-radius: 18px;
+    width: 500px;
+    height: 370px;
+    top: 506px;
+    left: 681px;
+    background-color: #fafafa;
+    
+}
+
+.login_box button {
+  display: block;
+  width: 80%;
+  margin: 15px auto 0;
+  padding: 15px 0;
+  margin-top: 30px;
+  background-color: #00c853;
+  color: white;
+  font-size: 1.2em;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login_box button:hover {
+  background-color: #00a343;
+}
