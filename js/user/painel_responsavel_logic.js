@@ -1,38 +1,17 @@
-// painel_responsavel_logic.js - VERSÃO FINAL CORRIGIDA
-import { auth, db } from './firebase.js';
+import { auth, db } from '../firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("🚀 Script painel_responsavel_logic.js carregado!");
+console.log("🚀 painel_responsavel_logic.js CARREGADO!");
 
-function getContainer() {
-    const container = document.getElementById('container-alunos');
-    if (!container) {
-        console.error('❌ ERRO CRÍTICO: Elemento #container-alunos não encontrado!');
-        // Cria o elemento se não existir
-        const newContainer = document.createElement('div');
-        newContainer.id = 'container-alunos';
-        document.body.appendChild(newContainer);
-        return newContainer;
-    }
-    return container;
-}
-
-// 🔥 CORREÇÃO DO EMAIL - função para normalizar email
-function normalizarEmail(email) {
-    return email.toLowerCase().trim();
-}
-
-// Verifica autenticação
+// Verifica se o usuário está logado e carrega os alunos
 onAuthStateChanged(auth, async (user) => {
     console.log("🔍 Estado da autenticação:", user ? "Usuário logado" : "Nenhum usuário");
     
     if (user) {
-        const emailNormalizado = normalizarEmail(user.email);
-        console.log("📧 Email normalizado:", emailNormalizado);
+        console.log("📧 Email do usuário logado:", user.email);
         console.log("🆔 UID do usuário:", user.uid);
-        
-        await carregarAlunos(emailNormalizado);
+        await carregarAlunos(user.email);
     } else {
         console.log("❌ Usuário não logado, redirecionando...");
         window.location.href = '../login.html';
@@ -40,16 +19,22 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 async function carregarAlunos(emailUsuario) {
-    const container = getContainer();
-    container.innerHTML = '<p>Buscando alunos...</p>';
+    const container = document.getElementById('container-alunos');
+    console.log("🎯 Container encontrado:", !!container);
+    console.log("🔍 Buscando alunos para o email:", emailUsuario);
     
-    console.log("🎯 Buscando alunos para:", emailUsuario);
+    if (!container) {
+        console.error("❌ ERRO: Elemento #container-alunos não encontrado!");
+        return;
+    }
+    
+    container.innerHTML = '<p>🔄 Buscando alunos...</p>';
     
     try {
-        // 🔥 TENTA DIFERENTES CAMPOS - o Firestore mostra "emailResponseAvel"
+        // 🔥 TENTA DIFERENTES CAMPOS - DEBUG COMPLETO
         const camposParaTestar = [
-            "emailResponseAvel", 
-            "emailResponsavel",
+            "emailResponsavel", 
+            "emailResponseAvel",
             "email_responsavel", 
             "responsavelEmail"
         ];
@@ -64,25 +49,30 @@ async function carregarAlunos(emailUsuario) {
             
             console.log(`📊 Resultados com ${campo}:`, snapshot.size);
             
-            if (!snapshot.empty) {
-                snapshot.forEach(doc => {
-                    alunosEncontrados.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+            snapshot.forEach(doc => {
+                console.log(`✅ Aluno encontrado com ${campo}:`, doc.id, doc.data());
+                alunosEncontrados.push({
+                    id: doc.id,
+                    ...doc.data()
                 });
-                break; // Para no primeiro campo que encontrar resultados
+            });
+            
+            if (snapshot.size > 0) {
+                console.log(`🎯 Campo correto encontrado: ${campo}`);
+                break;
             }
         }
         
         console.log("🎯 Total de alunos encontrados:", alunosEncontrados.length);
-        console.log("📋 Lista de alunos:", alunosEncontrados);
+        console.log("📋 Lista completa de alunos:", alunosEncontrados);
         
         if (alunosEncontrados.length === 0) {
             container.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: #666;">
-                    <p>Nenhum aluno encontrado vinculado à sua conta.</p>
+                    <p>❌ Nenhum aluno encontrado vinculado à sua conta.</p>
                     <small><strong>Email buscado:</strong> ${emailUsuario}</small>
+                    <br>
+                    <small><strong>Campos testados:</strong> ${camposParaTestar.join(', ')}</small>
                     <br>
                     <small>Verifique se o email está correto ou entre em contato com a administração.</small>
                 </div>
@@ -105,38 +95,54 @@ async function carregarAlunos(emailUsuario) {
 }
 
 function renderizarAlunos(alunos) {
-    const container = getContainer();
+    const container = document.getElementById('container-alunos');
     
     let html = '';
     
     alunos.forEach(aluno => {
-        console.log("🎨 Renderizando aluno:", aluno);
+        console.log(" Renderizando aluno:", aluno);
         
-        html += `
+         html += `
             <div class="aluno-card" data-aluno-id="${aluno.id}">
                 <div class="aluno-nome">${aluno.nomeAluno}</div>
-                <div class="aluno-turma">Turma: ${aluno.turma}</div>
+                <div class="aluno-turma">Turma: ${aluno.turma || aluno.classe}</div>
                 <div class="aluno-responsavel">Responsável: ${aluno.nomeResponsavel || 'Não informado'}</div>
-                <button class="btn-selecionar" onclick="selecionarAluno('${aluno.id}')">
-                    Selecionar Aluno
-                </button>
+                
+                <div class="aluno-actions">
+                    <button class="btn-notas" onclick="verNotas('${aluno.id}')">
+                        📊 Ver Notas
+                    </button>
+                    <button class="btn-comunicados" onclick="verComunicados('${aluno.id}')">
+                        📢 Comunicados
+                    </button>
+                </div>
             </div>
         `;
     });
+
 
     container.innerHTML = html;
     console.log("✅ Alunos renderizados com sucesso!");
 }
 
-// 🔥 FUNÇÃO GLOBAL para selecionar aluno
 function selecionarAluno(alunoId) {
-    console.log("🎯 Aluno selecionado:", alunoId);
-    alert(`Aluno ${alunoId} selecionado!`);
-    // Aqui você pode redirecionar: window.location.href = `detalhes.html?id=${alunoId}`;
+    console.log("Aluno selecionado:", alunoId);
+   
 }
 
-// Torna a função global
 window.selecionarAluno = selecionarAluno;
 
-// 🔥 TESTE INICIAL
-console.log("📌 Container no carregamento:", document.getElementById('container-alunos'));
+function verNotas(alunoId) {
+    console.log("📊 Acessando notas do aluno:", alunoId);
+    window.location.href = `visualizar_notas.html?id=${alunoId}`;
+}
+
+function verComunicados(alunoId) {
+    console.log("📢 Acessando comunicados do aluno:", alunoId);
+    
+    alert("Sistema de comunicados em desenvolvimento!");
+}
+
+
+window.verNotas = verNotas;
+window.verComunicados = verComunicados;

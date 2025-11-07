@@ -1,0 +1,59 @@
+
+        .aluno-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .aluno-nome {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .aluno-turma {
+            font-size: 14px;
+            color: #666;
+        }
+        .btn-selecionar {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    .aluno-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-notas, .btn-comunicados {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.3s;
+    }
+
+    .btn-notas {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-notas:hover {
+        background: #0056b3;
+    }
+
+    .btn-comunicados {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-comunicados:hover {
+        background: #218838;
+    }

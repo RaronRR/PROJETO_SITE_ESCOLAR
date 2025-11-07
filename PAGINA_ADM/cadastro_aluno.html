@@ -3,38 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Formulario De cadastro</title>
+    <title>Cadastro de Aluno - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { 
+            width: 100%; 
+            max-width: 300px; 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        button:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
-    <h1>Formulario Para Cadastro de Alunos(A)</h1>
+    <h1>Cadastro de Novo Aluno</h1>
+    
+    <form id="formCadastro">
+        <div class="form-group">
+            <label for="input_nome_cadastro">Nome Completo do Aluno:</label>
+            <input type="text" id="input_nome_cadastro" required>
+        </div>
 
-    <form>
-        <label>Nome do Aluno(a) Completo:</label>
-        <input type="text" id="input_nome_aluno" name="nome" required><br><br>
+        <div class="form-group">
+            <label for="input_tel_cadastro">Telefone do Responsável:</label>
+            <input type="tel" id="input_tel_cadastro" required>
+        </div>
 
-       
-        <label>Turma:</label>
-        <input type="text" id="turma_aluno" name="turma" required><br><br>
+        <div class="form-group">
+            <label for="input_email_cadastro">Email do Responsável:</label>
+            <input type="email" id="input_email_cadastro" required>
+        </div>
 
-        <label>Data de Nasciemento:</label>
-        <input type="date" id="data_nascimento_aluno" name="data_nascimento" required><br><br>
+        <div class="form-group">
+            <label for="ano">Ano/Série:</label>
+            <select id="ano" required>
+                <option value="">Selecione o ano</option>
+                <option value="infantil">Infantil</option>
+                <option value="1">1° Ano</option>
+                <option value="2">2° Ano</option>
+                <option value="3">3° Ano</option>
+                <option value="4">4° Ano</option>
+                <option value="5">5° Ano</option>
+            </select>
+        </div>
 
+        <div class="form-group">
+            <label for="classe">Classe/Turma:</label>
+            <select id="classe" required>
+                <option value="">Selecione a classe</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="I">I</option>
+                <option value="II">II</option>
+            </select>
+        </div>
 
-        <label>Nome de um Responsavel:</label>
-        <input type="text" id="input_nome_responsavel" required><br><br>
-       
-       
-        <label>Email do Responsavel</label>
-        <input type="email" id="input_email_responsavel" required><br><br>
-       
-        <button id="bottun_cadastro_Aluno">Enviar</button>
-    </form> 
+       <div class="form-group">
+    <label for="input_matricula_aluno">Matrícula do Aluno:</label>
+    <input type="text" id="input_matricula_aluno" required>
+    <small style="color: #666;">Identificação única do aluno no sistema</small>
+</div>
 
-    <script src="../js/firebase.js" type="module"></script> 
-    <script src="../js/admin_page_logic.js" type="module"></script> 
+        <button type="submit">Cadastrar Aluno</button>
+    </form>
 
-</body>
-</html>
+    <!-- Usa SEU firebase.js -->
+      <script type="module" src="../js/admin/header-admin.js"></script>
+    <script type="module" src="../js/admin/cadastro_alunos.js"></script>
 </body>
 </html>

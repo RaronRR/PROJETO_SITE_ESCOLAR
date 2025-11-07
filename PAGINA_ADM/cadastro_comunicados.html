@@ -1,0 +1,166 @@
+<!-- PAGINA_ADM/cadastro_comunicados.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunicados - Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-enviar {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn-enviar:hover {
+            background: #218838;
+        }
+
+        .filtro-turma {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .filtro-aluno {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .comunicado-preview {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .info-text {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📢 Enviar Comunicado</h1>
+        
+        <form id="formComunicado">
+            <div class="form-group">
+                <label for="titulo">Título do Comunicado:</label>
+                <input type="text" id="titulo" placeholder="Ex: Reunião de Pais, Feriado, etc." required>
+            </div>
+
+            <div class="form-group">
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" placeholder="Digite aqui o conteúdo do comunicado..." required></textarea>
+                <div class="info-text">Máximo de 500 caracteres</div>
+            </div>
+
+            <div class="form-group">
+                <label for="destino">Enviar para:</label>
+                <select id="destino" required>
+                    <option value="">Selecione o destino...</option>
+                    <option value="todos">📨 Todos os responsáveis</option>
+                    <option value="turma">🏫 Turma específica</option>
+                    <option value="aluno">👤 Aluno específico</option>
+                </select>
+            </div>
+
+            <!-- Filtro por turma -->
+            <div id="filtroTurma" class="filtro-turma">
+                <label for="turmaSelect">Selecionar Turma:</label>
+                <select id="turmaSelect">
+                    <option value="">Selecione a turma...</option>
+                    <option value="1A">1° Ano A</option>
+                    <option value="1B">1° Ano B</option>
+                    <option value="2A">2° Ano A</option>
+                    <option value="2B">2° Ano B</option>
+                    <option value="3A">3° Ano A</option>
+                    <option value="infantil">Infantil</option>
+                </select>
+            </div>
+
+            <!-- Filtro por aluno -->
+            <div id="filtroAluno" class="filtro-aluno">
+                <label for="alunoSelect">Selecionar Aluno:</label>
+                <input type="text" id="alunoSelect" placeholder="Digite a matrícula do aluno">
+                <div class="info-text" id="infoAluno"></div>
+            </div>
+
+            <!-- Preview do comunicado -->
+            <div id="comunicadoPreview" class="comunicado-preview" style="display: none;">
+                <h4>📋 Prévia do Comunicado:</h4>
+                <div id="previewContent"></div>
+            </div>
+
+            <button type="submit" class="btn-enviar">📤 Enviar Comunicado</button>
+        </form>
+    </div>
+
+    <script type="module" src="../js/admin/header-admin.js"></script>
+    <script type="module" src="../js/admin/cadastro_comunicados.js"></script>
+</body>
+</html>

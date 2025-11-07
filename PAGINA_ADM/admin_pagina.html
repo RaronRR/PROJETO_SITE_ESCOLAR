@@ -1,50 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../css/pagina_adm.css">
+    <title>Painel Administrativo</title>
+    
 </head>
-
 <body>
-    <h1>Página Administrativa</h1>
+    <div class="header">
+        <h1>🏫 Painel Administrativo</h1>
+        <div class="user-info">
+            Logado como: <span id="userEmail">Carregando...</span>
+        </div>
+    </div>
 
-    <button src="../PAGINA_ADM/cadastro_aluno.html"></button>
+    <!-- Estatísticas Rápidas -->
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalAlunos">0</div>
+            <div class="stat-label">Alunos Cadastrados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalUsuarios">0</div>
+            <div class="stat-label">Responsáveis</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Matérias</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Turmas Ativas</div>
+        </div>
+    </div>
 
-    <section class="cadastro_aluno">
-        <h1>Formulario Para Cadastro de Alunos(A)</h1>
+    <!-- Menu Principal -->
+    <div class="menu-admin">
+        <a href="cadastro_aluno.html" class="menu-item">
+            <span class="menu-icon">👨‍🎓</span>
+            <div class="menu-title">Cadastrar Aluno</div>
+            <div class="menu-description">Adicionar novo aluno ao sistema</div>
+        </a>
 
-        <form>
-            <label>Nome do Aluno(a) Completo:</label>
-            <input type="text" id="input_nome_aluno" name="nome" required><br><br>
+        <a href="cadastro_notas.html" class="menu-item">
+            <span class="menu-icon">📊</span>
+            <div class="menu-title">Lançar Notas</div>
+            <div class="menu-description">Inserir notas e médias</div>
+        </a>
+
+        <a href="cadastro_comunicados.html" class="menu-item">
+            <span class="menu-icon">📢</span>
+            <div class="menu-title">Comunicados</div>
+            <div class="menu-description">Enviar avisos aos responsáveis</div>
+        </a>
+
+        <a href="calendario_inserir.html" class="menu-item">
+            <span class="menu-icon">📅</span>
+            <div class="menu-title">Calendário</div>
+            <div class="menu-description">Adicionar eventos escolares</div>
+        </a>
+
+        <a href="chat_adm.html" class="menu-item">
+            <span class="menu-icon">💬</span>
+            <div class="menu-title">Chat</div>
+            <div class="menu-description">Conversar com responsáveis</div>
+        </a>
+
+        <a href="relatorios.html" class="menu-item">
+            <span class="menu-icon">📈</span>
+            <div class="menu-title">Relatórios</div>
+            <div class="menu-description">Relatórios e estatísticas</div>
+        </a>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">🚪 Sair do Sistema</button>
 
 
-            <label>Turma:</label>
-            <input type="text" id="turma_aluno" name="turma" required><br><br>
-
-            <label>Data de Nasciemento:</label>
-            <input type="date" id="data_nascimento_aluno" name="data_nascimento" required><br><br>
-
-
-            <label>Nome de um Responsavel:</label>
-            <input type="text" id="input_nome_responsavel" required><br><br>
-
-
-            <label>Email do Responsavel</label>
-            <input type="email" id="input_email_responsavel" required><br><br>
-
-            <button id="bottun_cadastro_Aluno">Enviar</button>
-        </form>
-    </section>
-
-
-
-
-    <script src="../js/admin_page_logic.js" type="module"></script>
+    <script src="../js/admin/header-admin.js" type="module"></script>
     <script src="../js/firebase.js" type="module"></script>
-    <script src="../js/auth.js" type="module"></script>
-    <script src="../js/ui.js" type="module"></script>
-</body>
+    <script type="module">
+        import { auth, db } from '../../js/firebase.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+        
+        console.log("🏫 Painel Admin carregado!");
 
+        // Verifica autenticação e permissões
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = '../../login.html';
+                return;
+            }
+
+            // Mostra email do usuário
+            document.getElementById('userEmail').textContent = user.email;
+            
+            // Verifica se é admin (você pode implementar uma verificação mais robusta depois)
+            console.log("👤 Usuário logado:", user.email);
+            
+            // Carrega estatísticas
+            await carregarEstatisticas();
+        });
+
+        async function carregarEstatisticas() {
+            try {
+                // Conta alunos
+                const alunosSnapshot = await getDocs(collection(db, "alunos"));
+                document.getElementById('totalAlunos').textContent = alunosSnapshot.size;
+                
+                // Conta usuários
+                const usuariosSnapshot = await getDocs(collection(db, "usuarios"));
+                document.getElementById('totalUsuarios').textContent = usuariosSnapshot.size;
+                
+            } catch (error) {
+                console.error("Erro ao carregar estatísticas:", error);
+            }
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = '../../login.html';
+            } catch (error) {
+                console.error("Erro ao fazer logout:", error);
+            }
+        });
+    </script>
+</body>
 </html>
