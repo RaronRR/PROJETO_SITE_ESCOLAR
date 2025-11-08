@@ -97,16 +97,28 @@ async function carregarAlunos(emailUsuario) {
 function renderizarAlunos(alunos) {
     const container = document.getElementById('container-alunos');
     
-    let html = '';
+    if (alunos.length === 0) {
+        container.innerHTML = `
+            <div class="sem-alunos">
+                <div style="font-size: 3em; margin-bottom: 15px;">👤</div>
+                <h3>Nenhum aluno encontrado</h3>
+                <p>Nenhum aluno está vinculado à sua conta.</p>
+                <p><small>Entre em contato com a administração da escola.</small></p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="container-alunos">';
     
     alunos.forEach(aluno => {
-        console.log(" Renderizando aluno:", aluno);
+        console.log("🎯 Renderizando aluno:", aluno);
         
-         html += `
+        html += `
             <div class="aluno-card" data-aluno-id="${aluno.id}">
-                <div class="aluno-nome">${aluno.nomeAluno}</div>
-                <div class="aluno-turma">Turma: ${aluno.turma || aluno.classe}</div>
-                <div class="aluno-responsavel">Responsável: ${aluno.nomeResponsavel || 'Não informado'}</div>
+                <div class="aluno-nome">${aluno.nomeAluno || 'Nome não informado'}</div>
+                <div class="aluno-turma">🏫 Turma: ${aluno.turma || aluno.ano + '° ' + aluno.classe || 'Não informada'}</div>
+                <div class="aluno-responsavel">📧 Responsável: ${aluno.emailResponsavel || 'Não informado'}</div>
                 
                 <div class="aluno-actions">
                     <button class="btn-notas" onclick="verNotas('${aluno.id}')">
@@ -115,16 +127,18 @@ function renderizarAlunos(alunos) {
                     <button class="btn-comunicados" onclick="verComunicados('${aluno.id}')">
                         📢 Comunicados
                     </button>
+                    <button class="btn-calendario" onclick="verCalendario()">
+                        🗓️ Calendário
+                    </button>
                 </div>
             </div>
         `;
     });
-
-
+    
+    html += '</div>';
     container.innerHTML = html;
     console.log("✅ Alunos renderizados com sucesso!");
 }
-
 function selecionarAluno(alunoId) {
     console.log("Aluno selecionado:", alunoId);
    
@@ -140,9 +154,14 @@ function verNotas(alunoId) {
 function verComunicados(alunoId) {
     console.log("📢 Acessando comunicados do aluno:", alunoId);
     
-    alert("Sistema de comunicados em desenvolvimento!");
+    window.location.href = `visualizar_comunicado.html?alunoId=${alunoId}`;
 }
 
+function verCalendario() {
+    console.log("🗓️ Acessando calendário escolar");
+    window.location.href = "visualizar_calendario.html";
+}
 
+window.verCalendario = verCalendario;
 window.verNotas = verNotas;
 window.verComunicados = verComunicados;

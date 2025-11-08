@@ -43,10 +43,12 @@ class VisualizarComunicados {
             this.alunosDoUsuario = [];
             
             snapshot.forEach(docSnap => {
-                this.alunosDoUsuario.push({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                });
+            const aluno = {
+                id: docSnap.id,
+                ...docSnap.data()
+            };
+            console.log("👤 Aluno encontrado:", aluno);
+            this.alunosDoUsuario.push(aluno);
             });
             
             console.log("✅ Alunos encontrados:", this.alunosDoUsuario.length);
@@ -103,9 +105,11 @@ class VisualizarComunicados {
                 ...docSnap.data()
             };
 
-            // Verifica se o comunicado é relevante para este usuário
-            if (await this.isComunicadoRelevante(comunicado, userEmail)) {
-                comunicadosRelevantes.push(comunicado);
+            const isRelevante = await this.isComunicadoRelevante(comunicado, userEmail);
+            console.log(`✅ Comunicado "${comunicado.titulo}" é relevante?`, isRelevante);
+        
+            if (isRelevante) {
+            comunicadosRelevantes.push(comunicado);
             }
         }
 
@@ -142,12 +146,15 @@ class VisualizarComunicados {
     }
     return ''; 
     }
-
+ 
     mostrarComunicados(comunicados) {
         const container = document.getElementById('listaComunicados');
         let html = '';
 
         comunicados.forEach(comunicado => {
+            // ✅ CORREÇÃO: Usar título COM ou SEM acento
+            const titulo = comunicado.titulo || comunicado.título;
+            const mensagem = comunicado.mensagem;
             const dataFormatada = this.formatarData(comunicado.criadoEm);
             const destinoTexto = this.getDestinoTexto(comunicado);
             const isNovo = !comunicado.lidoPor || !comunicado.lidoPor.includes(this.usuarioAtual.uid);
@@ -157,7 +164,7 @@ class VisualizarComunicados {
                     <div class="comunicado-header">
                         <div>
                             <h3 class="comunicado-titulo">
-                                ${comunicado.titulo}
+                                ${titulo}  <!-- ✅ Usa a variável corrigida -->
                                 ${isNovo ? '<span class="badge-novo">NOVO</span>' : ''}
                             </h3>
                             <div class="comunicado-data">${dataFormatada}</div>
@@ -166,7 +173,7 @@ class VisualizarComunicados {
                     </div>
                     
                     <div class="comunicado-mensagem">
-                        ${comunicado.mensagem}
+                        ${mensagem}
                     </div>
                     
                     <div style="font-size: 0.8em; color: #6c757d;">
@@ -177,8 +184,6 @@ class VisualizarComunicados {
         });
 
         container.innerHTML = html;
-
-        // Adiciona eventos de clique para marcar como lido
         this.configurarEventosComunicados();
     }
 

@@ -40,6 +40,21 @@
             color: #007bff; 
             margin-left: 10px; 
         }
+
+        .bimestre-select {
+        background: #e3f2fd;
+        border: 2px solid #2196f3;
+        border-radius: 6px;
+        padding: 10px;
+        font-weight: bold;
+        }
+
+        .bimestre-select:focus {
+        border-color: #1976d2;
+        outline: none;
+        }
+
+
     </style>
 </head>
 <body>
@@ -52,6 +67,18 @@
             <input type="text" id="alunoId" placeholder="Ex: 12345" required>
             <button type="button" id="btnBuscarAluno">Buscar Aluno</button>
             <div id="infoAluno" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- Adicione este campo após o campo de matrícula -->
+        <div class="form-group">
+            <label for="bimestre">Bimestre:</label>
+            <select id="bimestre" required>
+                <option value="">Selecione o bimestre...</option>
+                <option value="1">1° Bimestre</option>
+                <option value="2">2° Bimestre</option>
+                <option value="3">3° Bimestre</option>
+                <option value="4">4° Bimestre</option>
+            </select>
         </div>
 
         <!-- Português -->
