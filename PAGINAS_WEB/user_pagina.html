@@ -15,6 +15,22 @@
         </div>
     </div>
 
+    <button class="logout-btn" id="logoutBtn">🚪 Sair do Sistema</button>
+
     <script type="module" src="../js/user/painel_responsavel_logic.js"></script>
+    
+    <script type="module">
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { auth, db } from '../../js/firebase.js';
+        //logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = '../../login.html';
+            } catch (error) {
+                console.error("Erro ao fazer logout:", error);
+            }
+        });
+    </script>
 </body>
 </html>

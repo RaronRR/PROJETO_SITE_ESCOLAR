@@ -1,6 +1,7 @@
 <!-- PAGINA_ADM/cadastro_comunicados.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +19,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -103,10 +104,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>📢 Enviar Comunicado</h1>
-        
+
         <form id="formComunicado">
             <div class="form-group">
                 <label for="titulo">Título do Comunicado:</label>
@@ -159,8 +161,12 @@
             <button type="submit" class="btn-enviar">📤 Enviar Comunicado</button>
         </form>
     </div>
+    <a href="admin_pagina.html"
+        style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;">←
+        Voltar</a>
 
     <script type="module" src="../js/admin/header-admin.js"></script>
     <script type="module" src="../js/admin/cadastro_comunicados.js"></script>
 </body>
+
 </html>
