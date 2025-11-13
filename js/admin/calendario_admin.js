@@ -15,41 +15,120 @@ class CalendarioAdmin {
     }
 
     init() {
-        const form = document.getElementById("formEvento");
+        console.log("🔄 Inicializando calendário admin...");
         
+        const form = document.getElementById("formEvento");
+
         if (form) {
             form.addEventListener("submit", (e) => this.handleSubmit(e));
-            this.configurarEventos();
+            this.configurarTabs();
+            this.configurarEventosFormulario();
+            this.configurarBotoes();
+            
+            // Carrega eventos iniciais
             this.carregarEventos();
+            
             console.log("✅ Sistema de calendário admin inicializado");
+        } else {
+            console.error("❌ Formulário não encontrado!");
         }
     }
 
-    configurarEventos() {
-        // Mostra/oculta filtros baseado no destino
-        document.getElementById('destino').addEventListener('change', (e) => {
-            this.mostrarFiltros(e.target.value);
+    configurarTabs() {
+        console.log("🔧 Configurando tabs...");
+        const tabs = document.querySelectorAll('.tab');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const aba = e.target.getAttribute('onclick').replace("abrirAba('", "").replace("')", "");
+                console.log("📌 Tab clicada:", aba);
+                this.abrirAba(aba);
+            });
         });
+    }
+
+    configurarBotoes() {
+        const btnCancelar = document.getElementById('btnCancelar');
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', () => this.limparFormulario());
+        }
+    }
+
+    configurarEventosFormulario() {
+        console.log("🔧 Configurando eventos do formulário...");
+        
+        // Mostra/oculta filtros baseado no destino
+        const destino = document.getElementById('destino');
+        if (destino) {
+            destino.addEventListener('change', (e) => this.mostrarFiltros(e.target.value));
+        }
 
         // Preview em tempo real
-        document.getElementById('titulo').addEventListener('input', () => this.atualizarPreview());
-        document.getElementById('tipo').addEventListener('change', () => this.atualizarPreview());
-        document.getElementById('data').addEventListener('change', () => this.atualizarPreview());
-        document.getElementById('descricao').addEventListener('input', () => this.atualizarPreview());
+        ['titulo', 'tipo', 'data', 'descricao'].forEach(id => {
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                elemento.addEventListener('input', () => this.atualizarPreview());
+            }
+        });
 
-        // Busca e filtros na lista
-        document.getElementById('buscarEvento').addEventListener('input', () => this.filtrarEventos());
-        document.getElementById('filtroTipoLista').addEventListener('change', () => this.filtrarEventos());
+        // Filtros da lista
+        const buscarEvento = document.getElementById('buscarEvento');
+        const filtroTipoLista = document.getElementById('filtroTipoLista');
+        
+        if (buscarEvento) {
+            buscarEvento.addEventListener('input', () => this.filtrarEventos());
+        }
+        if (filtroTipoLista) {
+            filtroTipoLista.addEventListener('change', () => this.filtrarEventos());
+        }
+    }
+
+    abrirAba(aba) {
+        console.log("🔍 Tentando abrir aba:", aba);
+        
+        // Esconde todas as abas
+        document.querySelectorAll('.aba-conteudo').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Remove active de todas as tabs
+        document.querySelectorAll('.tab').forEach(el => {
+            el.classList.remove('active');
+        });
+        
+        // Mostra a aba selecionada
+        const abaElement = document.getElementById('aba-' + aba);
+        if (abaElement) {
+            abaElement.style.display = 'block';
+            console.log("✅ Aba mostrada:", aba);
+        } else {
+            console.error("❌ Aba não encontrada:", 'aba-' + aba);
+        }
+        
+        // Ativa a tab clicada
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            if (tab.getAttribute('onclick') === `abrirAba('${aba}')`) {
+                tab.classList.add('active');
+                console.log("✅ Tab ativada:", aba);
+            }
+        });
+
+        // Se for a aba gerenciar, recarrega os eventos
+        if (aba === 'gerenciar') {
+            console.log("🔄 Recarregando eventos para aba gerenciar");
+            this.mostrarListaEventos();
+        }
     }
 
     async carregarEventos() {
         try {
-            console.log("📥 Carregando eventos...");
-            
+            console.log("📥 Carregando eventos do Firebase...");
+
             const eventosRef = collection(db, "eventosCalendario");
             const q = query(eventosRef, orderBy("dataTimestamp", "desc"));
             const snapshot = await getDocs(q);
-            
+
             this.eventos = [];
             snapshot.forEach(docSnap => {
                 this.eventos.push({
@@ -63,22 +142,32 @@ class CalendarioAdmin {
 
         } catch (error) {
             console.error("❌ Erro ao carregar eventos:", error);
+            const lista = document.getElementById('listaEventos');
+            if (lista) {
+                lista.innerHTML = '<p>Erro ao carregar eventos. Verifique o console.</p>';
+            }
         }
     }
 
     mostrarListaEventos(eventosFiltrados = null) {
         const lista = document.getElementById('listaEventos');
+        if (!lista) {
+            console.error("❌ Elemento listaEventos não encontrado!");
+            return;
+        }
+
         const eventos = eventosFiltrados || this.eventos;
+        console.log("📋 Mostrando lista com", eventos.length, "eventos");
 
         if (eventos.length === 0) {
-            lista.innerHTML = '<p>Nenhum evento encontrado.</p>';
+            lista.innerHTML = '<p>Nenhum evento cadastrado.</p>';
             return;
         }
 
         let html = '';
         eventos.forEach(evento => {
             const dataFormatada = new Date(evento.data).toLocaleDateString('pt-BR');
-            
+
             html += `
                 <div class="evento-item ${evento.tipo}">
                     <div class="evento-header">
@@ -99,17 +188,18 @@ class CalendarioAdmin {
         });
 
         lista.innerHTML = html;
+        console.log("✅ Lista de eventos exibida");
     }
 
     filtrarEventos() {
-        const busca = document.getElementById('buscarEvento').value.toLowerCase();
-        const filtroTipo = document.getElementById('filtroTipoLista').value;
+        const busca = document.getElementById('buscarEvento')?.value.toLowerCase() || '';
+        const filtroTipo = document.getElementById('filtroTipoLista')?.value || 'all';
 
         let eventosFiltrados = this.eventos.filter(evento => {
-            const matchBusca = evento.titulo.toLowerCase().includes(busca) || 
-                             (evento.descricao && evento.descricao.toLowerCase().includes(busca));
+            const matchBusca = evento.titulo.toLowerCase().includes(busca) ||
+                (evento.descricao && evento.descricao.toLowerCase().includes(busca));
             const matchTipo = filtroTipo === 'all' || evento.tipo === filtroTipo;
-            
+
             return matchBusca && matchTipo;
         });
 
@@ -118,7 +208,8 @@ class CalendarioAdmin {
 
     async handleSubmit(e) {
         e.preventDefault();
-        
+        console.log("📝 Enviando formulário...");
+
         const titulo = document.getElementById('titulo').value.trim();
         const tipo = document.getElementById('tipo').value;
         const data = document.getElementById('data').value;
@@ -127,7 +218,7 @@ class CalendarioAdmin {
 
         // Validações
         if (!titulo || !tipo || !data || !destino) {
-            alert("Preencha todos os campos obrigatórios!");
+            alert("❌ Preencha todos os campos obrigatórios!");
             return;
         }
 
@@ -157,8 +248,8 @@ class CalendarioAdmin {
             } else {
                 // Modo cadastro
                 eventoData.criadoEm = serverTimestamp();
-                await addDoc(collection(db, "eventosCalendario"), eventoData);
-                console.log("✅ Evento criado:", eventoData);
+                const docRef = await addDoc(collection(db, "eventosCalendario"), eventoData);
+                console.log("✅ Evento criado com ID:", docRef.id);
                 alert("🎉 Evento criado com sucesso!");
             }
 
@@ -169,13 +260,17 @@ class CalendarioAdmin {
 
         } catch (error) {
             console.error("❌ Erro ao salvar evento:", error);
-            alert("Erro ao salvar evento: " + error.message);
+            alert("❌ Erro ao salvar evento: " + error.message);
         }
     }
 
     editarEvento(eventoId) {
+        console.log("✏️ Editando evento:", eventoId);
         const evento = this.eventos.find(e => e.id === eventoId);
-        if (!evento) return;
+        if (!evento) {
+            alert("❌ Evento não encontrado!");
+            return;
+        }
 
         this.modoEdicao = true;
         this.eventoEditando = evento;
@@ -202,9 +297,9 @@ class CalendarioAdmin {
         document.getElementById('eventoPreview').style.display = 'none';
 
         // Vai para aba de cadastro
-        abrirAba('cadastrar');
-        
-        console.log("✏️ Editando evento:", evento);
+        this.abrirAba('cadastrar');
+
+        console.log("✅ Formulário preenchido para edição");
     }
 
     async excluirEvento(eventoId) {
@@ -216,20 +311,20 @@ class CalendarioAdmin {
             await deleteDoc(doc(db, "eventosCalendario", eventoId));
             console.log("🗑️ Evento excluído:", eventoId);
             alert("✅ Evento excluído com sucesso!");
-            
+
             // Recarrega a lista
             await this.carregarEventos();
-            
+
         } catch (error) {
             console.error("❌ Erro ao excluir evento:", error);
-            alert("Erro ao excluir evento: " + error.message);
+            alert("❌ Erro ao excluir evento: " + error.message);
         }
     }
 
     sairModoEdicao() {
         this.modoEdicao = false;
         this.eventoEditando = null;
-        
+
         document.querySelector('button[type="submit"]').textContent = '💾 Salvar Evento';
         document.getElementById('btnCancelar').style.display = 'none';
         document.getElementById('eventoId').value = '';
@@ -240,19 +335,20 @@ class CalendarioAdmin {
         document.getElementById('eventoPreview').style.display = 'none';
         document.getElementById('filtroTurma').style.display = 'none';
         document.getElementById('filtroAno').style.display = 'none';
+        this.sairModoEdicao();
+        console.log("✅ Formulário limpo");
     }
 
-    // ... (mantém as outras funções: mostrarFiltros, atualizarPreview, getEventIcon, formatarTipo, formatarDestino)
     mostrarFiltros(destino) {
         const filtroTurma = document.getElementById('filtroTurma');
         const filtroAno = document.getElementById('filtroAno');
 
-        filtroTurma.style.display = 'none';
-        filtroAno.style.display = 'none';
+        if (filtroTurma) filtroTurma.style.display = 'none';
+        if (filtroAno) filtroAno.style.display = 'none';
 
-        if (destino === 'turma') {
+        if (destino === 'turma' && filtroTurma) {
             filtroTurma.style.display = 'block';
-        } else if (destino === 'ano') {
+        } else if (destino === 'ano' && filtroAno) {
             filtroAno.style.display = 'block';
         }
 
@@ -265,9 +361,11 @@ class CalendarioAdmin {
         const data = document.getElementById('data').value;
         const descricao = document.getElementById('descricao').value;
         const destino = document.getElementById('destino').value;
-        
+
         const preview = document.getElementById('eventoPreview');
         const previewContent = document.getElementById('previewContent');
+
+        if (!preview || !previewContent) return;
 
         if (!titulo && !data) {
             preview.style.display = 'none';
@@ -275,9 +373,11 @@ class CalendarioAdmin {
         }
 
         let destinoTexto = '';
-        switch(destino) {
-            case 'todos': destinoTexto = '👥 Para todos os responsáveis'; break;
-            case 'turma': 
+        switch (destino) {
+            case 'todos': 
+                destinoTexto = '👥 Para todos os responsáveis'; 
+                break;
+            case 'turma':
                 const turma = document.getElementById('turmaSelect').value;
                 destinoTexto = `🏫 Turma: ${turma || 'Não selecionada'}`;
                 break;
@@ -298,7 +398,7 @@ class CalendarioAdmin {
                 <small>${destinoTexto}</small>
             </div>
         `;
-        
+
         preview.style.display = 'block';
     }
 
@@ -336,29 +436,33 @@ class CalendarioAdmin {
     }
 
     formatarDestino(evento) {
-        switch(evento.destino) {
-            case 'todos': return 'Todos os responsáveis';
-            case 'turma': return `Turma ${evento.turma}`;
-            case 'ano': return `${evento.ano}° Ano`;
-            default: return 'Geral';
+        switch (evento.destino) {
+            case 'todos': 
+                return 'Todos os responsáveis';
+            case 'turma': 
+                return `Turma ${evento.turma}`;
+            case 'ano': 
+                return `${evento.ano}° Ano`;
+            default: 
+                return 'Geral';
         }
     }
 }
 
-// Funções globais para as abas
+// Funções globais para o HTML
 function abrirAba(aba) {
-    document.querySelectorAll('.aba-conteudo').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-    
-    document.getElementById('aba-' + aba).style.display = 'block';
-    event.target.classList.add('active');
+    if (window.calendarioAdmin) {
+        window.calendarioAdmin.abrirAba(aba);
+    }
 }
 
 function limparFormulario() {
-    calendarioAdmin.limparFormulario();
-    calendarioAdmin.sairModoEdicao();
+    if (window.calendarioAdmin) {
+        window.calendarioAdmin.limparFormulario();
+    }
 }
 
-// Inicializa o sistema
-const calendarioAdmin = new CalendarioAdmin();
-window.calendarioAdmin = calendarioAdmin;
+// Inicializa o sistema quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+    window.calendarioAdmin = new CalendarioAdmin();
+});
