@@ -1,7 +1,5 @@
-<!-- PAGINA_ADM/cadastro_comunicados.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background: #f8f9fa;
@@ -20,6 +18,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         h1 {
@@ -28,6 +27,37 @@
             margin-bottom: 30px;
         }
 
+        /* Abas */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .aba-conteudo {
+            display: none;
+        }
+
+        .aba-conteudo.ativa {
+            display: block;
+        }
+
+        /* Formulário */
         .form-group {
             margin-bottom: 20px;
         }
@@ -43,6 +73,7 @@
         textarea,
         select {
             width: 100%;
+            max-width: 500px;
             padding: 12px;
             border: 2px solid #e9ecef;
             border-radius: 6px;
@@ -62,31 +93,88 @@
             resize: vertical;
         }
 
-        .btn-enviar {
-            background: #28a745;
-            color: white;
-            padding: 15px 30px;
+        /* Botões */
+        .btn {
+            padding: 12px 24px;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
-            width: 100%;
-            transition: background 0.3s;
+            font-size: 16px;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .btn-enviar:hover {
-            background: #218838;
+        .btn-success {
+            background: #28a745;
+            color: white;
         }
 
-        .filtro-turma {
-            display: none;
-            margin-top: 10px;
+        .btn-warning {
+            background: #ffc107;
+            color: black;
         }
 
-        .filtro-aluno {
-            display: none;
-            margin-top: 10px;
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Lista de comunicados */
+        .comunicados-lista {
+            margin-top: 20px;
+        }
+
+        .comunicado-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .comunicado-item.turma {
+            border-left-color: #28a745;
+        }
+
+        .comunicado-item.aluno {
+            border-left-color: #fd7e14;
+        }
+
+        .comunicado-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comunicado-titulo {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .comunicado-acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comunicado-info {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .comunicado-mensagem {
+            color: #495057;
+            line-height: 1.5;
+            margin: 10px 0;
         }
 
         .comunicado-preview {
@@ -97,76 +185,122 @@
             border-left: 4px solid #007bff;
         }
 
+        .filtro-turma, .filtro-aluno {
+            display: none;
+            margin-top: 10px;
+        }
+
         .info-text {
             color: #6c757d;
             font-size: 0.9em;
             margin-top: 5px;
+        }
+
+        /* Filtros na lista */
+        .filtros-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>📢 Enviar Comunicado</h1>
+        <h1>📢 Gerenciar Comunicados</h1>
 
-        <form id="formComunicado">
-            <div class="form-group">
-                <label for="titulo">Título do Comunicado:</label>
-                <input type="text" id="titulo" placeholder="Ex: Reunião de Pais, Feriado, etc." required>
-            </div>
+        <!-- Abas -->
+        <div class="tabs">
+            <button class="tab active" data-aba="enviar">📤 Enviar Comunicado</button>
+            <button class="tab" data-aba="gerenciar">📋 Gerenciar Comunicados</button>
+        </div>
 
-            <div class="form-group">
-                <label for="mensagem">Mensagem:</label>
-                <textarea id="mensagem" placeholder="Digite aqui o conteúdo do comunicado..." required></textarea>
-                <div class="info-text">Máximo de 500 caracteres</div>
-            </div>
+        <!-- Aba Enviar -->
+        <div id="aba-enviar" class="aba-conteudo ativa">
+            <form id="formComunicado">
+                <input type="hidden" id="comunicadoId" value="">
 
-            <div class="form-group">
-                <label for="destino">Enviar para:</label>
-                <select id="destino" required>
-                    <option value="">Selecione o destino...</option>
-                    <option value="todos">📨 Todos os responsáveis</option>
-                    <option value="turma">🏫 Turma específica</option>
-                    <option value="aluno">👤 Aluno específico</option>
+                <div class="form-group">
+                    <label for="titulo">Título do Comunicado:</label>
+                    <input type="text" id="titulo" placeholder="Ex: Reunião de Pais, Feriado, etc." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mensagem">Mensagem:</label>
+                    <textarea id="mensagem" placeholder="Digite aqui o conteúdo do comunicado..." required maxlength="500"></textarea>
+                    <div class="info-text" id="contadorCaracteres">0/500 caracteres</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="destino">Enviar para:</label>
+                    <select id="destino" required>
+                        <option value="">Selecione o destino...</option>
+                        <option value="todos">📨 Todos os responsáveis</option>
+                        <option value="turma">🏫 Turma específica</option>
+                        <option value="aluno">👤 Aluno específico</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por turma -->
+                <div id="filtroTurma" class="filtro-turma">
+                    <label for="turmaSelect">Selecionar Turma:</label>
+                    <select id="turmaSelect">
+                        <option value="">Selecione a turma...</option>
+                        <option value="1A">1° Ano A</option>
+                        <option value="1B">1° Ano B</option>
+                        <option value="2A">2° Ano A</option>
+                        <option value="2B">2° Ano B</option>
+                        <option value="3A">3° Ano A</option>
+                        <option value="infantil">Infantil</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por aluno -->
+                <div id="filtroAluno" class="filtro-aluno">
+                    <label for="alunoSelect">Selecionar Aluno:</label>
+                    <input type="text" id="alunoSelect" placeholder="Digite a matrícula do aluno">
+                    <div class="info-text" id="infoAluno"></div>
+                </div>
+
+                <!-- Preview do comunicado -->
+                <div id="comunicadoPreview" class="comunicado-preview" style="display: none;">
+                    <h4>👀 Prévia do Comunicado:</h4>
+                    <div id="previewContent"></div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">💾 Salvar Comunicado</button>
+                    <button type="button" class="btn btn-warning" id="btnCancelar" style="display: none;">
+                        ❌ Cancelar Edição
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Aba Gerenciar -->
+        <div id="aba-gerenciar" class="aba-conteudo">
+            <div class="filtros-container">
+                <input type="text" id="buscarComunicado" placeholder="🔍 Buscar comunicados..." class="form-group">
+                <select id="filtroDestinoLista" class="form-group">
+                    <option value="all">Todos os destinos</option>
+                    <option value="todos">Todos os responsáveis</option>
+                    <option value="turma">Turmas</option>
+                    <option value="aluno">Alunos</option>
                 </select>
             </div>
 
-            <!-- Filtro por turma -->
-            <div id="filtroTurma" class="filtro-turma">
-                <label for="turmaSelect">Selecionar Turma:</label>
-                <select id="turmaSelect">
-                    <option value="">Selecione a turma...</option>
-                    <option value="1A">1° Ano A</option>
-                    <option value="1B">1° Ano B</option>
-                    <option value="2A">2° Ano A</option>
-                    <option value="2B">2° Ano B</option>
-                    <option value="3A">3° Ano A</option>
-                    <option value="infantil">Infantil</option>
-                </select>
+            <div id="listaComunicados" class="comunicados-lista">
+                <p>Carregando comunicados...</p>
             </div>
-
-            <!-- Filtro por aluno -->
-            <div id="filtroAluno" class="filtro-aluno">
-                <label for="alunoSelect">Selecionar Aluno:</label>
-                <input type="text" id="alunoSelect" placeholder="Digite a matrícula do aluno">
-                <div class="info-text" id="infoAluno"></div>
-            </div>
-
-            <!-- Preview do comunicado -->
-            <div id="comunicadoPreview" class="comunicado-preview" style="display: none;">
-                <h4>📋 Prévia do Comunicado:</h4>
-                <div id="previewContent"></div>
-            </div>
-
-            <button type="submit" class="btn-enviar">📤 Enviar Comunicado</button>
-        </form>
+        </div>
     </div>
-    <a href="admin_pagina.html"
-        style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;">←
-        Voltar</a>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="admin_pagina.html" class="btn btn-secondary">← Voltar ao Dashboard</a>
+    </div>
 
     <script type="module" src="../js/admin/header-admin.js"></script>
     <script type="module" src="../js/admin/cadastro_comunicados.js"></script>
 </body>
-
 </html>

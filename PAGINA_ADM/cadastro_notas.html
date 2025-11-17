@@ -1,167 +1,445 @@
-<!-- PAGINA_ADM/cadastro_notas.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lançamento de Notas - Admin</title>
+    <title>Gerenciar Notas - Admin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
         }
 
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Abas */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .aba-conteudo {
+            display: none;
+        }
+
+        .aba-conteudo.ativa {
+            display: block;
+        }
+
+        /* Formulário */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
+            color: #495057;
         }
 
-        input,
-        select {
+        input, select {
             width: 100%;
-            max-width: 300px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 16px;
         }
 
+        /* Botões */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: black;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Matérias */
         .materia-group {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+            border: 2px solid #e9ecef;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .materia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .materia-titulo {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .notas-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .nota-input {
-            width: 80px;
-            margin: 0 5px;
+            width: 100px;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            text-align: center;
         }
 
-        button {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .media-container {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 2px solid #007bff;
         }
 
-        button:hover {
-            background: #0056b3;
+        .media-label {
+            font-weight: bold;
+            color: #495057;
         }
 
-        .media {
+        .media-valor {
             font-weight: bold;
             color: #007bff;
-            margin-left: 10px;
+            font-size: 1.1em;
         }
 
-        .bimestre-select {
-            background: #e3f2fd;
-            border: 2px solid #2196f3;
+        .media-aprovado {
+            color: #28a745;
+        }
+
+        .media-recuperacao {
+            color: #ffc107;
+        }
+
+        .media-reprovado {
+            color: #dc3545;
+        }
+
+        /* Lista de notas */
+        .notas-lista {
+            margin-top: 20px;
+        }
+
+        .aluno-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .aluno-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .aluno-info {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .aluno-acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .materias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .materia-card {
+            background: #f8f9fa;
+            padding: 15px;
             border-radius: 6px;
-            padding: 10px;
-            font-weight: bold;
+            border: 1px solid #dee2e6;
         }
 
-        .bimestre-select:focus {
-            border-color: #1976d2;
-            outline: none;
+        .materia-nome {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .nota-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        /* Filtros */
+        .filtros-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .info-aluno {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            margin-bottom: 20px;
+        }
+
+        .bimestre-badge {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <h1>📊 Lançamento de Notas</h1>
+    <div class="container">
+        <h1>📊 Gerenciar Notas</h1>
 
-    <form id="formNotas">
-        <!-- Matrícula do Aluno -->
-        <div class="form-group">
-            <label for="alunoId">Matrícula do Aluno:</label>
-            <input type="text" id="alunoId" placeholder="Ex: 12345" required>
-            <button type="button" id="btnBuscarAluno">Buscar Aluno</button>
-            <div id="infoAluno" style="margin-top: 10px;"></div>
+        <!-- Abas -->
+        <div class="tabs">
+            <button class="tab active" data-aba="lancar">🎯 Lançar Notas</button>
+            <button class="tab" data-aba="gerenciar">📋 Gerenciar Notas</button>
         </div>
 
-        <!-- Adicione este campo após o campo de matrícula -->
-        <div class="form-group">
-            <label for="bimestre">Bimestre:</label>
-            <select id="bimestre" required>
-                <option value="">Selecione o bimestre...</option>
-                <option value="1">1° Bimestre</option>
-                <option value="2">2° Bimestre</option>
-                <option value="3">3° Bimestre</option>
-                <option value="4">4° Bimestre</option>
-            </select>
+        <!-- Aba Lançar Notas -->
+        <div id="aba-lancar" class="aba-conteudo ativa">
+            <form id="formNotas">
+                <input type="hidden" id="notaId" value="">
+
+                <div class="form-group">
+                    <label for="alunoId">Matrícula do Aluno:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="alunoId" placeholder="Ex: 12345" required>
+                        <button type="button" id="btnBuscarAluno" class="btn btn-primary">🔍 Buscar Aluno</button>
+                    </div>
+                    <div id="infoAluno" class="info-aluno" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bimestre">Bimestre:</label>
+                    <select id="bimestre" required>
+                        <option value="">Selecione o bimestre...</option>
+                        <option value="1">1° Bimestre</option>
+                        <option value="2">2° Bimestre</option>
+                        <option value="3">3° Bimestre</option>
+                        <option value="4">4° Bimestre</option>
+                    </select>
+                </div>
+
+                <!-- Português -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">📝 Português</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="portMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="portNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="portNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="portNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Matemática -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">🔢 Matemática</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="matMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="matNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="matNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="matNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Ciências -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">🔬 Ciências</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="cieMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="cieNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="cieNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="cieNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <!-- História -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">📜 História</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="histMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="histNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="histNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="histNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Geografia -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">🌎 Geografia</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="geoMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="geoNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="geoNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="geoNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Inglês -->
+                <div class="materia-group">
+                    <div class="materia-header">
+                        <div class="materia-titulo">🔠 Inglês</div>
+                        <div class="media-container">
+                            <span class="media-label">Média: </span>
+                            <span class="media-valor" id="ingMedia">0.0</span>
+                        </div>
+                    </div>
+                    <div class="notas-container">
+                        <input type="number" id="ingNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
+                        <input type="number" id="ingNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
+                        <input type="number" id="ingNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">💾 Salvar Notas</button>
+                    <button type="button" class="btn btn-warning" id="btnCancelar" style="display: none;">
+                        ❌ Cancelar Edição
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <!-- Português -->
-        <div class="materia-group">
-            <h3>📝 Português</h3>
-            <input type="number" id="portNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="portNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="portNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="portMedia">0.0</span></span>
-        </div>
+        <!-- Aba Gerenciar -->
+        <div id="aba-gerenciar" class="aba-conteudo">
+            <div class="filtros-container">
+                <input type="text" id="buscarAluno" placeholder="🔍 Buscar por aluno ou turma..." class="form-group">
+                <select id="filtroBimestre" class="form-group">
+                    <option value="all">Todos os bimestres</option>
+                    <option value="1">1° Bimestre</option>
+                    <option value="2">2° Bimestre</option>
+                    <option value="3">3° Bimestre</option>
+                    <option value="4">4° Bimestre</option>
+                </select>
+                <select id="filtroTurma" class="form-group">
+                    <option value="all">Todas as turmas</option>
+                    <option value="1A">1° Ano A</option>
+                    <option value="1B">1° Ano B</option>
+                    <option value="2A">2° Ano A</option>
+                    <option value="2B">2° Ano B</option>
+                    <option value="3A">3° Ano A</option>
+                </select>
+            </div>
 
-        <!-- Matemática -->
-        <div class="materia-group">
-            <h3>🔢 Matemática</h3>
-            <input type="number" id="matNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="matNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="matNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="matMedia">0.0</span></span>
+            <div id="listaNotas" class="notas-lista">
+                <p>Carregando notas...</p>
+            </div>
         </div>
+    </div>
 
-        <!-- Ciências -->
-        <div class="materia-group">
-            <h3>🔬 Ciências</h3>
-            <input type="number" id="cieNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="cieNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="cieNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="cieMedia">0.0</span></span>
-        </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="admin_pagina.html" class="btn btn-secondary">← Voltar ao Dashboard</a>
+    </div>
 
-        <!-- História -->
-        <div class="materia-group">
-            <h3>📜 História</h3>
-            <input type="number" id="histNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="histNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="histNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="histMedia">0.0</span></span>
-        </div>
-
-        <!-- Geografia -->
-        <div class="materia-group">
-            <h3>🌎 Geografia</h3>
-            <input type="number" id="geoNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="geoNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="geoNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="geoMedia">0.0</span></span>
-        </div>
-
-        <!-- Inglês -->
-        <div class="materia-group">
-            <h3>🔠 Inglês</h3>
-            <input type="number" id="ingNota1" class="nota-input" placeholder="Nota 1" min="0" max="10" step="0.1">
-            <input type="number" id="ingNota2" class="nota-input" placeholder="Nota 2" min="0" max="10" step="0.1">
-            <input type="number" id="ingNota3" class="nota-input" placeholder="Nota 3" min="0" max="10" step="0.1">
-            <span class="media">Média: <span id="ingMedia">0.0</span></span>
-        </div>
-
-        <button type="submit">💾 Salvar Todas as Notas</button>
-        <a href="admin_pagina.html"
-            style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px;">←
-            Voltar</a>
-    </form>
     <script type="module" src="../js/admin/header-admin.js"></script>
     <script type="module" src="../js/admin/cadastro_notas.js"></script>
 </body>
-
 </html>
