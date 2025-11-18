@@ -1,0 +1,261 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Abas */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 16px;
+    border-bottom: 3px solid transparent;
+}
+
+.tab.active {
+    border-bottom-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.aba-conteudo {
+    display: none;
+}
+
+.aba-conteudo.ativa {
+    display: block;
+}
+
+/* Formulário */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+}
+
+input,
+select {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Botões */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: black;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* Matérias */
+.materia-group {
+    border: 2px solid #e9ecef;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.materia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.materia-titulo {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.notas-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nota-input {
+    width: 100px;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.media-container {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 2px solid #007bff;
+}
+
+.media-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.media-valor {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.1em;
+}
+
+.media-aprovado {
+    color: #28a745;
+}
+
+.media-recuperacao {
+    color: #ffc107;
+}
+
+.media-reprovado {
+    color: #dc3545;
+}
+
+/* Lista de notas */
+.notas-lista {
+    margin-top: 20px;
+}
+
+.aluno-item {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.aluno-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.aluno-info {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.aluno-acoes {
+    display: flex;
+    gap: 10px;
+}
+
+.materias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.materia-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.materia-nome {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.nota-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+/* Filtros */
+.filtros-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.info-aluno {
+    background: #e7f3ff;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+    margin-bottom: 20px;
+}
+
+.bimestre-badge {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: bold;
+}

@@ -1,0 +1,210 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Controles do calendário */
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #e3f2fd;
+    border-radius: 8px;
+}
+
+.month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-nav {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-nav:hover {
+    background: #0056b3;
+}
+
+.current-month {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+}
+
+/* Grid do calendário */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.calendar-header {
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.calendar-day {
+    background: white;
+    padding: 10px;
+    min-height: 120px;
+    border: 1px solid #e9ecef;
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.day-events {
+    font-size: 0.8em;
+}
+
+.event-item {
+    background: #e3f2fd;
+    padding: 2px 5px;
+    margin: 2px 0;
+    border-radius: 3px;
+    border-left: 3px solid #007bff;
+    cursor: pointer;
+}
+
+.event-item.feriado {
+    border-left-color: #28a745;
+    background: #f0fff4;
+}
+
+.event-item.prova {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+
+.event-item.reuniao {
+    border-left-color: #6f42c1;
+    background: #f8f9ff;
+}
+
+.event-item.evento {
+    border-left-color: #fd7e14;
+    background: #fff3e0;
+}
+
+/* Dia atual */
+.today {
+    background: #fff3cd !important;
+}
+
+/* Outro mês */
+.other-month {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+/* Lista de eventos */
+.events-sidebar {
+    margin-top: 30px;
+}
+
+.events-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.event-card {
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin: 10px 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.event-card.feriado {
+    border-left-color: #28a745;
+}
+
+.event-card.prova {
+    border-left-color: #dc3545;
+}
+
+.event-card.reuniao {
+    border-left-color: #6f42c1;
+}
+
+.event-card.evento {
+    border-left-color: #fd7e14;
+}
+
+.event-date {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.event-title {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.event-desc {
+    color: #495057;
+    font-size: 0.9em;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .calendar-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .calendar-day {
+        min-height: 80px;
+        padding: 5px;
+    }
+}
