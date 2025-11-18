@@ -2,15 +2,12 @@ import { auth, db } from '../firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("🚀 painel_responsavel_logic.js CARREGADO!");
 
 // Verifica se o usuário está logado e carrega os alunos
 onAuthStateChanged(auth, async (user) => {
-    console.log("🔍 Estado da autenticação:", user ? "Usuário logado" : "Nenhum usuário");
     
     if (user) {
         console.log("📧 Email do usuário logado:", user.email);
-        console.log("🆔 UID do usuário:", user.uid);
         await carregarAlunos(user.email);
     } else {
         console.log("❌ Usuário não logado, redirecionando...");
@@ -20,8 +17,6 @@ onAuthStateChanged(auth, async (user) => {
 
 async function carregarAlunos(emailUsuario) {
     const container = document.getElementById('container-alunos');
-    console.log("🎯 Container encontrado:", !!container);
-    console.log("🔍 Buscando alunos para o email:", emailUsuario);
     
     if (!container) {
         console.error("❌ ERRO: Elemento #container-alunos não encontrado!");
@@ -42,15 +37,12 @@ async function carregarAlunos(emailUsuario) {
         let alunosEncontrados = [];
         
         for (let campo of camposParaTestar) {
-            console.log(`🔍 Tentando campo: ${campo}`);
             
             const q = query(collection(db, "alunos"), where(campo, "==", emailUsuario));
             const snapshot = await getDocs(q);
             
-            console.log(`📊 Resultados com ${campo}:`, snapshot.size);
             
             snapshot.forEach(doc => {
-                console.log(`✅ Aluno encontrado com ${campo}:`, doc.id, doc.data());
                 alunosEncontrados.push({
                     id: doc.id,
                     ...doc.data()
@@ -58,13 +50,10 @@ async function carregarAlunos(emailUsuario) {
             });
             
             if (snapshot.size > 0) {
-                console.log(`🎯 Campo correto encontrado: ${campo}`);
                 break;
             }
         }
         
-        console.log("🎯 Total de alunos encontrados:", alunosEncontrados.length);
-        console.log("📋 Lista completa de alunos:", alunosEncontrados);
         
         if (alunosEncontrados.length === 0) {
             container.innerHTML = `
@@ -112,7 +101,6 @@ function renderizarAlunos(alunos) {
     let html = '<div class="container-alunos">';
     
     alunos.forEach(aluno => {
-        console.log("🎯 Renderizando aluno:", aluno);
         
         html += `
             <div class="aluno-card" data-aluno-id="${aluno.id}">
@@ -137,7 +125,6 @@ function renderizarAlunos(alunos) {
     
     html += '</div>';
     container.innerHTML = html;
-    console.log("✅ Alunos renderizados com sucesso!");
 }
 function selecionarAluno(alunoId) {
     console.log("Aluno selecionado:", alunoId);

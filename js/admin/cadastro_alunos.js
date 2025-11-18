@@ -2,8 +2,6 @@
 import { db } from '../firebase.js';
 import { doc, setDoc, getDoc, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("🎯 Script cadastro_alunos.js CARREGADO!");
-
 class CadastroAlunos {
     constructor() {
         this.init();
@@ -11,11 +9,9 @@ class CadastroAlunos {
 
     init() {
         const form = document.getElementById("formCadastro");
-        console.log("📝 Formulário encontrado:", !!form);
         
         if (form) {
             form.addEventListener("submit", (e) => this.handleSubmit(e));
-            console.log("✅ Event listener adicionado ao formulário");
         } else {
             console.error("❌ FORMULÁRIO NÃO ENCONTRADO!");
         }
@@ -23,7 +19,6 @@ class CadastroAlunos {
 
     async handleSubmit(e) {
         e.preventDefault();
-        console.log("🎯 Formulário enviado - INICIANDO");
 
         const dados = {
             nome: document.getElementById("input_nome_cadastro").value.trim(),
@@ -34,7 +29,6 @@ class CadastroAlunos {
             matricula: document.getElementById("input_matricula_aluno").value.trim()
         };
 
-        console.log("📦 Dados coletados:", dados);
 
         // Validação
         if (!dados.matricula) {
@@ -56,7 +50,6 @@ class CadastroAlunos {
     }
 
     async cadastrarAluno(dados) {
-        console.log("🔍 Verificando se responsável existe...");
         
         // 1. Verifica se o responsável JÁ EXISTE no sistema
         const usuariosRef = collection(db, "usuarios");
@@ -71,13 +64,12 @@ class CadastroAlunos {
             const usuarioDoc = querySnapshot.docs[0];
             responsibleUID = usuarioDoc.id;
             nomeResponsavel = usuarioDoc.data().nome;
-            console.log("✅ Responsável encontrado:", nomeResponsavel);
         } else {
             console.log("⚠️ Responsável não encontrado - aluno será 'pendente'");
         }
 
         // 2. Verifica se matrícula já existe
-        console.log("🔍 Verificando se matrícula já existe...");
+        console.log("Verificando se matrícula já existe...");
         const alunoRef = doc(db, "alunos", dados.matricula);
         const alunoSnap = await getDoc(alunoRef);
 
@@ -86,7 +78,6 @@ class CadastroAlunos {
         }
 
         // 3. Salva o aluno
-        console.log("💾 Salvando aluno no Firestore...");
         await setDoc(alunoRef, {
             nomeAluno: dados.nome,
             telefone: dados.telefone,
@@ -131,11 +122,7 @@ class CadastroAlunos {
     limparFormulario() {
         const form = document.getElementById("formCadastro");
         if (form) form.reset();
-        console.log("🧹 Formulário limpo");
     }
 }
 
-// 🔥🔥🔥 ISSO É O MAIS IMPORTANTE - INSTANCIA A CLASSE 🔥🔥🔥
-console.log("🚀 Inicializando CadastroAlunos...");
 new CadastroAlunos();
-console.log("✅ CadastroAlunos inicializado!");

@@ -3,7 +3,6 @@ import { auth, db } from '../firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("📊 Sistema de visualização de notas carregado!");
 
 class VisualizarNotas {
     constructor() {
@@ -35,7 +34,6 @@ class VisualizarNotas {
     getAlunoIdFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         this.alunoId = urlParams.get('id');
-        console.log("🎯 ID do aluno:", this.alunoId);
     }
 
     configurarBimestres() {
@@ -48,7 +46,6 @@ class VisualizarNotas {
                 e.target.classList.add('active');
                 
                 this.bimestreAtual = e.target.dataset.bimestre;
-                console.log(`🔄 Carregando notas do ${this.bimestreAtual}° bimestre`);
                 this.carregarNotas();
             });
         });
@@ -102,7 +99,6 @@ class VisualizarNotas {
         try {
             container.innerHTML = '<div class="loading"><p>📚 Carregando notas...</p></div>';
 
-            console.log(`🔍 Buscando notas do aluno ${this.alunoId} para o ${this.bimestreAtual}° bimestre`);
 
             // ✅ CORREÇÃO: Busca TODAS as notas e filtra por bimestre
             const notasRef = collection(db, "alunos", this.alunoId, "notas");
@@ -116,24 +112,19 @@ class VisualizarNotas {
             const notasDoBimestre = [];
             
             // DEBUG: Mostra todos os documentos encontrados
-            console.log("📁 Todos os documentos na subcoleção notas:");
             snapshot.forEach(docSnap => {
                 const notaData = {
                     id: docSnap.id,
                     ...docSnap.data()
                 };
-                console.log("   📄", docSnap.id, "=>", notaData);
                 
                 // ✅ FILTRA APENAS AS NOTAS DO BIMESTRE ATUAL
                 if (notaData.bimestre === this.bimestreAtual) {
-                    console.log("   ✅ Incluindo - bimestre correto");
                     notasDoBimestre.push(notaData);
                 } else {
-                    console.log("   ❌ Ignorando - bimestre diferente");
-                }
+                    }
             });
 
-            console.log(`📊 Notas do ${this.bimestreAtual}° bimestre:`, notasDoBimestre.length);
 
             if (notasDoBimestre.length === 0) {
                 this.mostrarSemNotas();

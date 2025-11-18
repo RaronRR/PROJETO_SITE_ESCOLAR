@@ -4,7 +4,6 @@ import {
     updateDoc, deleteDoc, query, where, orderBy 
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("📊 Sistema de notas carregado!");
 
 class NotasAdmin {
     constructor() {
@@ -16,7 +15,6 @@ class NotasAdmin {
     }
 
     init() {
-        console.log("🔄 Inicializando sistema de notas...");
         
         const form = document.getElementById("formNotas");
 
@@ -26,20 +24,17 @@ class NotasAdmin {
             this.configurarEventos();
             this.configurarBotoes();
             
-            console.log("✅ Sistema de notas inicializado");
         } else {
-            console.error("❌ Formulário não encontrado!");
+            console.error(" Formulário não encontrado!");
         }
     }
 
     configurarTabs() {
-        console.log("🔧 Configurando tabs...");
         const tabs = document.querySelectorAll('.tab');
         
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const aba = e.target.getAttribute('data-aba');
-                console.log("📌 Tab clicada:", aba);
                 this.abrirAba(aba);
             });
         });
@@ -59,14 +54,12 @@ class NotasAdmin {
     }
 
     configurarEventos() {
-        console.log("🔧 Configurando eventos...");
         
         // Evento do bimestre
         const selectBimestre = document.getElementById('bimestre');
         if (selectBimestre) {
             selectBimestre.addEventListener("change", (e) => {
                 this.bimestreAtual = e.target.value;
-                console.log("📅 Bimestre selecionado:", this.bimestreAtual);
                 
                 // Recarrega notas se já tiver aluno selecionado
                 const matricula = document.getElementById("alunoId").value.trim();
@@ -109,7 +102,6 @@ class NotasAdmin {
     }
 
     abrirAba(aba) {
-        console.log("🔍 Tentando abrir aba:", aba);
         
         // Esconde todas as abas
         document.querySelectorAll('.aba-conteudo').forEach(el => {
@@ -125,9 +117,7 @@ class NotasAdmin {
         const abaElement = document.getElementById('aba-' + aba);
         if (abaElement) {
             abaElement.classList.add('ativa');
-            console.log("✅ Aba mostrada:", aba);
         } else {
-            console.error("❌ Aba não encontrada:", 'aba-' + aba);
         }
         
         // Ativa a tab clicada
@@ -135,13 +125,11 @@ class NotasAdmin {
         tabs.forEach(tab => {
             if (tab.getAttribute('data-aba') === aba) {
                 tab.classList.add('active');
-                console.log("✅ Tab ativada:", aba);
             }
         });
 
         // Se for a aba gerenciar, carrega as notas
         if (aba === 'gerenciar') {
-            console.log("🔄 Carregando notas para aba gerenciar");
             this.carregarTodasNotas();
         }
     }
@@ -242,7 +230,6 @@ class NotasAdmin {
                 }
             });
 
-            console.log("✅ Notas existentes carregadas para o", this.bimestreAtual + "° bimestre");
 
         } catch (error) {
             console.error("Erro ao carregar notas existentes:", error);
@@ -316,7 +303,6 @@ class NotasAdmin {
                 ingles: this.getNotasMateria("ing")
             };
 
-            console.log("💾 Salvando notas para o", bimestre + "° bimestre:", notas);
 
             // Salva cada matéria com o bimestre no ID
             for (const [materia, dadosNotas] of Object.entries(notas)) {
@@ -338,10 +324,9 @@ class NotasAdmin {
                     { merge: true }
                 );
 
-                console.log(`✅ ${materia} (${bimestre}° bim) salva - Média: ${media}`);
             }
 
-            alert(`🎉 Todas as notas do ${bimestre}° bimestre foram salvas com sucesso!`);
+            alert(`Todas as notas do ${bimestre}° bimestre foram salvas com sucesso!`);
             this.mostrarResumoNotas(notas, bimestre);
 
             // Limpa o formulário e recarrega a lista
@@ -365,17 +350,14 @@ class NotasAdmin {
             
             resumo += `${this.formatarMateria(materia)}: ${dados.nota1} | ${dados.nota2} | ${dados.nota3} → Média: ${media} - ${status}\n`;
         }
-        
-        console.log(resumo);
     }
 
     async carregarTodasNotas() {
         try {
-            console.log("📥 Carregando todas as notas...");
             const lista = document.getElementById('listaNotas');
             
             if (!lista) {
-                console.error("❌ Elemento listaNotas não encontrado!");
+                console.error("Elemento listaNotas não encontrado!");
                 return;
             }
 
@@ -414,7 +396,6 @@ class NotasAdmin {
                 }
             }
 
-            console.log("✅ Alunos com notas carregados:", this.alunosComNotas.length);
             this.mostrarListaNotas();
 
         } catch (error) {
@@ -521,7 +502,6 @@ class NotasAdmin {
     }
 
     editarNotasAluno(matricula) {
-        console.log("✏️ Editando notas do aluno:", matricula);
         
         // Preenche a matrícula no formulário
         document.getElementById('alunoId').value = matricula;
@@ -563,7 +543,6 @@ class NotasAdmin {
         document.getElementById('infoAluno').innerHTML = '';
         this.limparCamposNotas();
         this.sairModoEdicao();
-        console.log("✅ Formulário limpo");
     }
 
     sairModoEdicao() {

@@ -4,7 +4,6 @@ import {
     getDocs, serverTimestamp, query, orderBy, getDoc 
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("📢 Sistema de comunicados carregado!");
 
 class ComunicadosAdmin {
     constructor() {
@@ -15,7 +14,6 @@ class ComunicadosAdmin {
     }
 
     init() {
-        console.log("🔄 Inicializando sistema de comunicados...");
         
         const form = document.getElementById("formComunicado");
 
@@ -28,20 +26,17 @@ class ComunicadosAdmin {
             // Carrega comunicados iniciais
             this.carregarComunicados();
             
-            console.log("✅ Sistema de comunicados inicializado");
         } else {
             console.error("❌ Formulário não encontrado!");
         }
     }
 
     configurarTabs() {
-        console.log("🔧 Configurando tabs...");
         const tabs = document.querySelectorAll('.tab');
         
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const aba = e.target.getAttribute('data-aba');
-                console.log("📌 Tab clicada:", aba);
                 this.abrirAba(aba);
             });
         });
@@ -55,7 +50,6 @@ class ComunicadosAdmin {
     }
 
     configurarEventosFormulario() {
-        console.log("🔧 Configurando eventos do formulário...");
         
         // Mostra/oculta filtros baseado no destino
         const destino = document.getElementById('destino');
@@ -95,7 +89,6 @@ class ComunicadosAdmin {
     }
 
     abrirAba(aba) {
-        console.log("🔍 Tentando abrir aba:", aba);
         
         // Esconde todas as abas
         document.querySelectorAll('.aba-conteudo').forEach(el => {
@@ -111,7 +104,6 @@ class ComunicadosAdmin {
         const abaElement = document.getElementById('aba-' + aba);
         if (abaElement) {
             abaElement.classList.add('ativa');
-            console.log("✅ Aba mostrada:", aba);
         } else {
             console.error("❌ Aba não encontrada:", 'aba-' + aba);
         }
@@ -121,20 +113,17 @@ class ComunicadosAdmin {
         tabs.forEach(tab => {
             if (tab.getAttribute('data-aba') === aba) {
                 tab.classList.add('active');
-                console.log("✅ Tab ativada:", aba);
             }
         });
 
         // Se for a aba gerenciar, recarrega os comunicados
         if (aba === 'gerenciar') {
-            console.log("🔄 Recarregando comunicados para aba gerenciar");
             this.mostrarListaComunicados();
         }
     }
 
     async carregarComunicados() {
         try {
-            console.log("📥 Carregando comunicados do Firebase...");
 
             const comunicadosRef = collection(db, "comunicados");
             const q = query(comunicadosRef, orderBy("criadoEm", "desc"));
@@ -148,7 +137,6 @@ class ComunicadosAdmin {
                 });
             });
 
-            console.log("✅ Comunicados carregados:", this.comunicados.length);
             this.mostrarListaComunicados();
 
         } catch (error) {
@@ -168,7 +156,6 @@ class ComunicadosAdmin {
         }
 
         const comunicados = comunicadosFiltrados || this.comunicados;
-        console.log("📋 Mostrando lista com", comunicados.length, "comunicados");
 
         if (comunicados.length === 0) {
             lista.innerHTML = '<p>Nenhum comunicado encontrado.</p>';
@@ -206,7 +193,6 @@ class ComunicadosAdmin {
 
         // Adiciona event listeners aos botões
         this.configurarBotoesComunicados();
-        console.log("✅ Lista de comunicados exibida");
     }
 
     configurarBotoesComunicados() {
@@ -245,7 +231,6 @@ class ComunicadosAdmin {
 
     async handleSubmit(e) {
         e.preventDefault();
-        console.log("📤 Enviando comunicado...");
 
         const titulo = document.getElementById('titulo').value.trim();
         const mensagem = document.getElementById('mensagem').value.trim();
@@ -357,7 +342,6 @@ class ComunicadosAdmin {
         // Vai para aba de envio
         this.abrirAba('enviar');
 
-        console.log("✅ Formulário preenchido para edição");
     }
 
     async excluirComunicado(comunicadoId) {

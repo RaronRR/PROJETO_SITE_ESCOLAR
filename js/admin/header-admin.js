@@ -1,9 +1,6 @@
 import { auth } from '../../firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-console.log("🔧 Header Admin carregado!");
-
-// CSS do header (adiciona automaticamente)
 const headerCSS = `
 <style>
     .admin-header {
@@ -103,12 +100,10 @@ document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
 onAuthStateChanged(auth, (user) => {
         if (user) {
-            console.log("👤 Usuario logado:", user.email);
             if (userEmailElement) {
                 userEmailElement.textContent = user.email;
             }
         } else {
-            console.log("❌ Usuario não autenticado");
             window.location.href = '../login.html';
         }
     });
@@ -121,7 +116,6 @@ onAuthStateChanged(auth, (user) => {
                 console.log("🚪 Usuario deslogado");
                 window.location.href = '../login.html';
             } catch (error) {
-                console.error("❌ Erro ao fazer logout:", error);
             }
         });
     }

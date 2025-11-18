@@ -3,7 +3,6 @@ import { auth, db } from '../firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { collection, query, where, getDocs, orderBy, updateDoc, doc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("📢 Sistema de visualização de comunicados carregado!");
 
 class VisualizarComunicados {
     constructor() {
@@ -32,7 +31,6 @@ class VisualizarComunicados {
     async carregarAlunosDoUsuario() {
         try {
             const userEmail = this.usuarioAtual.email;
-            console.log("🔍 Buscando alunos para:", userEmail);
             
             const q = query(
                 collection(db, "alunos"), 
@@ -47,11 +45,9 @@ class VisualizarComunicados {
                 id: docSnap.id,
                 ...docSnap.data()
             };
-            console.log("👤 Aluno encontrado:", aluno);
             this.alunosDoUsuario.push(aluno);
             });
             
-            console.log("✅ Alunos encontrados:", this.alunosDoUsuario.length);
             
         } catch (error) {
             console.error("❌ Erro ao carregar alunos:", error);
@@ -95,7 +91,6 @@ class VisualizarComunicados {
             id: docSnap.id,
             ...docSnap.data()
         };
-         console.log("📄 Comunicado:", comunicado);
         });
 
 
@@ -106,14 +101,12 @@ class VisualizarComunicados {
             };
 
             const isRelevante = await this.isComunicadoRelevante(comunicado, userEmail);
-            console.log(`✅ Comunicado "${comunicado.titulo}" é relevante?`, isRelevante);
         
             if (isRelevante) {
             comunicadosRelevantes.push(comunicado);
             }
         }
 
-        console.log("📨 Comunicados relevantes:", comunicadosRelevantes.length);
         return comunicadosRelevantes;
     }
 
@@ -217,7 +210,6 @@ class VisualizarComunicados {
                 lidoPor: arrayUnion(this.usuarioAtual.uid)
             });
             
-            console.log("✅ Comunicado marcado como lido:", comunicadoId);
             
         } catch (error) {
             console.error("❌ Erro ao marcar como lido:", error);

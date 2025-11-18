@@ -4,7 +4,6 @@ import {
     getDocs, serverTimestamp, query, orderBy 
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("🗓️ Sistema de calendário admin carregado!");
 
 class CalendarioAdmin {
     constructor() {
@@ -15,7 +14,6 @@ class CalendarioAdmin {
     }
 
     init() {
-        console.log("🔄 Inicializando calendário admin...");
         
         const form = document.getElementById("formEvento");
 
@@ -28,20 +26,17 @@ class CalendarioAdmin {
             // Carrega eventos iniciais
             this.carregarEventos();
             
-            console.log("✅ Sistema de calendário admin inicializado");
         } else {
             console.error("❌ Formulário não encontrado!");
         }
     }
 
     configurarTabs() {
-        console.log("🔧 Configurando tabs...");
         const tabs = document.querySelectorAll('.tab');
         
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const aba = e.target.getAttribute('onclick').replace("abrirAba('", "").replace("')", "");
-                console.log("📌 Tab clicada:", aba);
                 this.abrirAba(aba);
             });
         });
@@ -55,7 +50,6 @@ class CalendarioAdmin {
     }
 
     configurarEventosFormulario() {
-        console.log("🔧 Configurando eventos do formulário...");
         
         // Mostra/oculta filtros baseado no destino
         const destino = document.getElementById('destino');
@@ -84,7 +78,6 @@ class CalendarioAdmin {
     }
 
     abrirAba(aba) {
-        console.log("🔍 Tentando abrir aba:", aba);
         
         // Esconde todas as abas
         document.querySelectorAll('.aba-conteudo').forEach(el => {
@@ -100,7 +93,6 @@ class CalendarioAdmin {
         const abaElement = document.getElementById('aba-' + aba);
         if (abaElement) {
             abaElement.style.display = 'block';
-            console.log("✅ Aba mostrada:", aba);
         } else {
             console.error("❌ Aba não encontrada:", 'aba-' + aba);
         }
@@ -110,20 +102,17 @@ class CalendarioAdmin {
         tabs.forEach(tab => {
             if (tab.getAttribute('onclick') === `abrirAba('${aba}')`) {
                 tab.classList.add('active');
-                console.log("✅ Tab ativada:", aba);
             }
         });
 
         // Se for a aba gerenciar, recarrega os eventos
         if (aba === 'gerenciar') {
-            console.log("🔄 Recarregando eventos para aba gerenciar");
             this.mostrarListaEventos();
         }
     }
 
     async carregarEventos() {
         try {
-            console.log("📥 Carregando eventos do Firebase...");
 
             const eventosRef = collection(db, "eventosCalendario");
             const q = query(eventosRef, orderBy("dataTimestamp", "desc"));
@@ -137,7 +126,6 @@ class CalendarioAdmin {
                 });
             });
 
-            console.log("✅ Eventos carregados:", this.eventos.length);
             this.mostrarListaEventos();
 
         } catch (error) {
@@ -157,7 +145,6 @@ class CalendarioAdmin {
         }
 
         const eventos = eventosFiltrados || this.eventos;
-        console.log("📋 Mostrando lista com", eventos.length, "eventos");
 
         if (eventos.length === 0) {
             lista.innerHTML = '<p>Nenhum evento cadastrado.</p>';
@@ -188,7 +175,6 @@ class CalendarioAdmin {
         });
 
         lista.innerHTML = html;
-        console.log("✅ Lista de eventos exibida");
     }
 
     filtrarEventos() {
@@ -208,7 +194,6 @@ class CalendarioAdmin {
 
     async handleSubmit(e) {
         e.preventDefault();
-        console.log("📝 Enviando formulário...");
 
         const titulo = document.getElementById('titulo').value.trim();
         const tipo = document.getElementById('tipo').value;
@@ -243,13 +228,11 @@ class CalendarioAdmin {
             if (this.modoEdicao && this.eventoEditando) {
                 // Modo edição
                 await updateDoc(doc(db, "eventosCalendario", this.eventoEditando.id), eventoData);
-                console.log("✅ Evento atualizado:", this.eventoEditando.id);
                 alert("✅ Evento atualizado com sucesso!");
             } else {
                 // Modo cadastro
                 eventoData.criadoEm = serverTimestamp();
                 const docRef = await addDoc(collection(db, "eventosCalendario"), eventoData);
-                console.log("✅ Evento criado com ID:", docRef.id);
                 alert("🎉 Evento criado com sucesso!");
             }
 
@@ -265,7 +248,6 @@ class CalendarioAdmin {
     }
 
     editarEvento(eventoId) {
-        console.log("✏️ Editando evento:", eventoId);
         const evento = this.eventos.find(e => e.id === eventoId);
         if (!evento) {
             alert("❌ Evento não encontrado!");
@@ -299,7 +281,6 @@ class CalendarioAdmin {
         // Vai para aba de cadastro
         this.abrirAba('cadastrar');
 
-        console.log("✅ Formulário preenchido para edição");
     }
 
     async excluirEvento(eventoId) {
@@ -309,7 +290,6 @@ class CalendarioAdmin {
 
         try {
             await deleteDoc(doc(db, "eventosCalendario", eventoId));
-            console.log("🗑️ Evento excluído:", eventoId);
             alert("✅ Evento excluído com sucesso!");
 
             // Recarrega a lista
@@ -336,7 +316,6 @@ class CalendarioAdmin {
         document.getElementById('filtroTurma').style.display = 'none';
         document.getElementById('filtroAno').style.display = 'none';
         this.sairModoEdicao();
-        console.log("✅ Formulário limpo");
     }
 
     mostrarFiltros(destino) {

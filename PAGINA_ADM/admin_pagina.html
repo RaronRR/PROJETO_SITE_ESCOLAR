@@ -83,8 +83,6 @@
         import { auth, db } from '../../js/firebase.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
         import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-        
-        console.log("🏫 Painel Admin carregado!");
 
         // Verifica autenticação e permissões
         onAuthStateChanged(auth, async (user) => {
@@ -97,7 +95,7 @@
             document.getElementById('userEmail').textContent = user.email;
             
             // Verifica se é admin (você pode implementar uma verificação mais robusta depois)
-            console.log("👤 Usuário logado:", user.email);
+            console.log("Usuário:", user.email);
             
             // Carrega estatísticas
             await carregarEstatisticas();

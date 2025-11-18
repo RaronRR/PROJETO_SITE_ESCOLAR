@@ -2,7 +2,6 @@ import { auth, db } from '../firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-console.log("🗓️ Sistema de calendário carregado!");
 
 class VisualizarCalendario {
     constructor() {
@@ -34,7 +33,6 @@ class VisualizarCalendario {
     async carregarAlunosDoUsuario() {
         try {
             const userEmail = this.usuarioAtual.email;
-            console.log("🔍 Buscando alunos para:", userEmail);
             
             const q = query(
                 collection(db, "alunos"), 
@@ -49,11 +47,9 @@ class VisualizarCalendario {
                     id: docSnap.id,
                     ...docSnap.data()
                 };
-                console.log("👤 Aluno encontrado:", aluno);
                 this.alunosDoUsuario.push(aluno);
             });
             
-            console.log("✅ Alunos encontrados:", this.alunosDoUsuario.length);
             
         } catch (error) {
             console.error("❌ Erro ao carregar alunos:", error);
@@ -62,7 +58,6 @@ class VisualizarCalendario {
 
     async carregarEventos() {
         try {
-            console.log("📅 Carregando eventos do calendário...");
             
             const eventosRef = collection(db, "eventosCalendario");
             const q = query(eventosRef, orderBy("dataTimestamp", "asc"));
@@ -83,7 +78,6 @@ class VisualizarCalendario {
                 }
             });
 
-            console.log("✅ Eventos relevantes encontrados:", this.eventos.length);
 
         } catch (error) {
             console.error("❌ Erro ao carregar eventos:", error);
