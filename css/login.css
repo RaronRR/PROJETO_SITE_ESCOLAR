@@ -2,7 +2,7 @@
   font-family: myFont;
   src: url(../assets/fonts/Nunito-VariableFont_wght.ttf);
 }
-body{
+body {
   background-image: url(../assets/img/fundo.png);
   background-attachment: fixed;
   background-color: white;
@@ -31,7 +31,6 @@ h1 {
 }
 
 form {
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,24 +40,28 @@ form {
 }
 
 .login_box {
-  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
   width: 500px;
-  height: 370px;
-  top: 506px;
-  left: 681px;
-  background-color: #fafafa;
+  background: #fafafa;
+  margin: 10px auto;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .login_box fieldset {
   border: none;
   padding: 0;
   margin: none;
-  padding:none  ;
+  padding: none;
 }
 
 .login_box legend {
-  font-size: 0.8em;
-  color: #999;
+  font-size: 15px;
+  color: #3c3c3c;
   padding: 0;
   margin-bottom: 5px;
   display: block;
@@ -92,46 +95,6 @@ button {
 .login_box button:hover {
   background-color: #00a343;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .color-bar {
   position: fixed;
