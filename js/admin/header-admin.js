@@ -104,7 +104,7 @@ onAuthStateChanged(auth, (user) => {
                 userEmailElement.textContent = user.email;
             }
         } else {
-            window.location.href = '../login.html';
+            window.location.href = '../index.html';
         }
     });
 
@@ -114,7 +114,7 @@ onAuthStateChanged(auth, (user) => {
             try {
                 await signOut(auth);
                 console.log("🚪 Usuario deslogado");
-                window.location.href = '../login.html';
+                window.location.href = '../index.html';
             } catch (error) {
             }
         });
@@ -123,7 +123,7 @@ onAuthStateChanged(auth, (user) => {
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '../../login.html';
+        window.location.href = '../../index.html';
     } catch (error) {
         console.error("Erro ao fazer logout:", error);
     }

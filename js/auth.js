@@ -64,7 +64,7 @@ function verificarUsuarioLogado() {
 
 
 //Login de Usuário 
-const botaoLogin = document.getElementById("bottun_login");
+const botaoLogin = document.getElementById("button_login");
 if (botaoLogin) {
     botaoLogin.addEventListener("click", fazerLogin);
 }
@@ -95,9 +95,9 @@ async function fazerLogin(e) {
             const role = userData.role;
 
             if (role === "admin") {
-                targetPage = "/PAGINA_ADM/admin_pagina.html"; // ADM
+                targetPage = "./PAGINA_ADM/admin_pagina.html"; // ADM
             } else {
-                targetPage = "PAGINAS_WEB/user_pagina.html"; // USUÁRIO
+                targetPage = "./PAGINAS_WEB/user_pagina.html"; // USUÁRIO
             }
 
             // Redireciona apenas uma vez, após definir targetPage
